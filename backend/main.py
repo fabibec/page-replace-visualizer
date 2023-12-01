@@ -3,7 +3,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-app = FastAPI()
+app = FastAPI(
+        title="Page Fault API", openapi_url="/openapi.json")
 
 # Mounting the "frontend" directory to serve static files(HTML, CSS, JS)
 app.mount("/static", StaticFiles(directory="../frontend"), name="/static")
