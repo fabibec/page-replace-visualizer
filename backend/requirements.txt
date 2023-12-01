@@ -1,0 +1,8 @@
+# Required for the API
+fastapi==0.68.0
+# Required for running the server
+uvicorn==0.15.0
+# Required for file uploads
+aiofiles==0.7.0
+# Required for html templates
+Jinja2==3.0.1
