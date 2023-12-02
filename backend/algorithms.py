@@ -1,5 +1,4 @@
-
-def lru(frames, referenceString):
+async def lru(frames, referenceString):
     pageFaults = 0
     frameList = []
     # Create empty frames list
@@ -41,22 +40,16 @@ def lru(frames, referenceString):
     return pageFaults
 
 
-def lruTest():
-    test_frames = [3, 4, 5]
-    test_referenceStrings = [
-                ['1', '2', '3', '4', '1', '2', '5', '1', '2', '3', '4', '5'],
-                ['7', '0', '3', '2', '1', '2', '0', '1', '7', '0', '1'],
-                ['2', '3', '2', '1', '5', '2', '4', '5', '3', '2', '5', '2']
-            ]
-    expected_results = [10, 6, 5]
-
-    for i in range(len(test_frames)):
-        result = lru(test_frames[i], test_referenceStrings[i])
-        print("Test", i + 1, ":", "PASS" if result == expected_results[i] else "FAIL")
-
-
-
-if __name__ == "__main__":
-    lruTest()
-
-
+# Page replacement algorithm FIFO which takes the number of frames and an array of strings (reference string) as input and returns the number of page faults.
+async def fifo(frames, reference_string):
+    page_faults = 0
+    frame_list = []
+    for i in range(frames):
+        frame_list.append(None)
+    frame_index = 0
+    for i in range(len(reference_string)):
+        if reference_string[i] not in frame_list:
+            frame_list[frame_index] = reference_string[i]
+            frame_index = (frame_index + 1) % frames
+            page_faults += 1
+    return page_faults
