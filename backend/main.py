@@ -3,10 +3,23 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from typing import Annotated
+
+from algorithms import fifo, lru
 import constants as c
 from validation import validateRefString
-from algorithms import fifo, lru
-import asyncio
+
+# Meta Data for documentation
+tags_metadata = [
+    {
+        "name": "faults",
+        "description": "#TODO Description",
+    },
+    {
+        "name": "faultsArray",
+        "description": "#TODO Description",
+    },
+]
+
 
 # API Specification
 app = FastAPI(
@@ -19,7 +32,8 @@ app = FastAPI(
         "identifier": "MIT",
         "url": "https://mit-license.org/"     
     },
-    openapi_url="/openapi.json"
+    openapi_url="/openapi.json",
+    openapi_tags=tags_metadata
 )
 
 
@@ -35,21 +49,22 @@ app.mount("/static", StaticFiles(directory="../frontend"), name="/static")
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root():
-    return HTMLResponse(content="/static/index.html", status_code=200)
+    return HTMLResponse(content="static/index.html", status_code=200)
 
 '''
 This section handles the Backend Endpoints
 '''
 @app.get("/api/refString/")
-async def apiRefString(
+async def generate_Reference_String(
         locality: Annotated[bool, Query(title="Locality creates more realistic Reference String")] = True,
         length: Annotated[int, Query(title="The length of the Reference String", ge=c.FRAMES_MIN_VALUE, le=c.FRAMES_MAX_VALUE)] = c.FRAMES_DEFAULT_VALUE
     ):
+    # return {"ReferenceString" : refStr(locality, length)}
     raise NotImplementedError
 
 
-@app.get("/api/faults/")
-async def apiFaults(
+@app.get("/api/faults/", tags=["faults"])
+async def calculate_Page_Faults(
         referenceString: str, 
         frames: Annotated[int, Query(title="The maximum Number of Frames", ge=c.FRAMES_MIN_VALUE, le=c.FRAMES_MAX_VALUE)] = c.FRAMES_DEFAULT_VALUE, 
         FIFO: Annotated[bool, Query(title="First-in-First-out Algorithm")] = True, 
@@ -73,24 +88,29 @@ async def apiFaults(
     if debug:
         resp["InputReferenceString"] = refStr
 
-    # This executes the functions concurrently 
-    result_keys = ["LRU", "FIFO"]
-    resultLRU, resultFIFO = await asyncio.gather(
-        lru(frames, refStr) if LRU else asyncio.sleep(0),
-        fifo(frames, refStr) if FIFO else asyncio.sleep(0)
-    )
-    results = list()
-    results.append(resultLRU)
-    results.append(resultFIFO)
-    for index, entry in enumerate(results):
-        if entry:
-            resp[result_keys[index]] = entry
+    # Execute LRU
+    if LRU:
+        resp["LRU"] = lru(frames, refStr)
+
+    # Execute FIFO
+    if FIFO:
+        resp["FIFO"] = fifo(frames, refStr)
+
+    # Execute OPT
+    if OPT:
+        # resp["OPT"] = opt(frames, refStr)
+        pass
+
+    # Execute SC
+    if SC:
+        # resp["SC"] = sc(frames, refStr)
+        pass
     
     return resp
     
 
-@app.get("/api/faults/array")
-async def apiFaultsArray(
+@app.get("/api/faults/array", tags=["faultsArray"])
+async def calculate_Page_Faults_Array(
         referenceString: str, 
         maxFrames: Annotated[int, Query(title="Number of Frames", ge=c.FRAMES_MIN_VALUE, le=c.FRAMES_MAX_VALUE)] = c.FRAMES_DEFAULT_VALUE, 
         FIFO: Annotated[bool, Query(title="First-in-First-out Algorithm")] = True, 
@@ -103,7 +123,7 @@ async def apiFaultsArray(
 
     # Validating and decoding reference string
     try:
-        refStr = await validateRefString(referenceString)
+        refStr = await validateRefString(referenceString, encoded=base64)
     except ValueError as ex:
         raise HTTPException(status_code=422, detail=str(ex))
 
@@ -114,5 +134,26 @@ async def apiFaultsArray(
     if debug:
         resp["InputReferenceString"] = refStr
 
+    # Execute LRU
+    if LRU:
+        resp["LRU"] = \
+            [result for result in (lru(f, refStr) for f in range(c.FRAMES_MIN_VALUE, maxFrames + 1))]
+
+    # Execute FIFO
+    if FIFO:
+        resp["FIFO"] = \
+            [result for result in (fifo(f, refStr) for f in range(c.FRAMES_MIN_VALUE, maxFrames + 1))]
+
+    # Execute OPT
+    if OPT:
+        # resp["OPT"] = \
+        # [result for result in (opt(f, refStr) for f in range(c.FRAMES_MIN_VALUE, maxFrames + 1))]
+        pass
+
+    # Execute SC
+    if SC:
+        # resp["SC"] = \
+        # [result for result in (sc(f, refStr) for f in range(c.FRAMES_MIN_VALUE, maxFrames + 1))]
+        pass
 
     return resp

@@ -1,4 +1,4 @@
-async def lru(frames, referenceString):
+def lru(frames, referenceString):
     pageFaults = 0
     frameList = []
     # Create empty frames list
@@ -41,7 +41,7 @@ async def lru(frames, referenceString):
 
 
 # Page replacement algorithm FIFO which takes the number of frames and an array of strings (reference string) as input and returns the number of page faults.
-async def fifo(frames, reference_string):
+def fifo(frames, reference_string):
     page_faults = 0
     frame_list = []
     for i in range(frames):
