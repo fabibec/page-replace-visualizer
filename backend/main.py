@@ -1,15 +1,22 @@
-from fastapi import FastAPI, HTTPException, Path, Query
+from fastapi import FastAPI, HTTPException, Query, RequestValidationError
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from starlette.responses import FileResponse
 from typing import Annotated
+from pydantic.error_wrappers import ErrorWrapper
 
-from algorithms import fifo, lru
+from algorithms import refStringGen, fifo, lru, opt
 import constants as c
+from response_models import Faults, FaultsArray
 from validation import validateRefString
 
 # Meta Data for documentation
 tags_metadata = [
+    {
+        "name": "referenceString",
+        "description": "#TODO Description",
+    },
     {
         "name": "faults",
         "description": "#TODO Description",
@@ -49,21 +56,20 @@ app.mount("/static", StaticFiles(directory="../frontend"), name="/static")
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root():
-    return HTMLResponse(content="static/index.html", status_code=200)
+    return FileResponse("../frontend/index.html")
 
 '''
 This section handles the Backend Endpoints
 '''
-@app.get("/api/refString/")
+@app.get("/api/refString/", tags=["referenceString"])
 async def generate_Reference_String(
         locality: Annotated[bool, Query(title="Locality creates more realistic Reference String")] = True,
         length: Annotated[int, Query(title="The length of the Reference String", ge=c.FRAMES_MIN_VALUE, le=c.FRAMES_MAX_VALUE)] = c.FRAMES_DEFAULT_VALUE
     ):
-    # return {"ReferenceString" : refStr(locality, length)}
-    raise NotImplementedError
+    return {"ReferenceString" : refStringGen(length, locality)}
 
 
-@app.get("/api/faults/", tags=["faults"])
+@app.get("/api/faults/", tags=["faults"], response_model=Faults, response_model_exclude_none=True)
 async def calculate_Page_Faults(
         referenceString: str, 
         frames: Annotated[int, Query(title="The maximum Number of Frames", ge=c.FRAMES_MIN_VALUE, le=c.FRAMES_MAX_VALUE)] = c.FRAMES_DEFAULT_VALUE, 
@@ -81,35 +87,17 @@ async def calculate_Page_Faults(
     except ValueError as ex:
         raise HTTPException(status_code=422, detail=str(ex))
 
-    # Create Response
-    resp = dict()
-
-    # Print string in debug mode
-    if debug:
-        resp["InputReferenceString"] = refStr
-
-    # Execute LRU
-    if LRU:
-        resp["LRU"] = lru(frames, refStr)
-
-    # Execute FIFO
-    if FIFO:
-        resp["FIFO"] = fifo(frames, refStr)
-
-    # Execute OPT
-    if OPT:
-        # resp["OPT"] = opt(frames, refStr)
-        pass
-
-    # Execute SC
-    if SC:
-        # resp["SC"] = sc(frames, refStr)
-        pass
-    
-    return resp
+    # Building response model
+    return Faults(
+        InputReferenceString=refStr if debug else None,
+        FIFO=fifo(frames, refStr) if FIFO else None,
+        #SC=sc(frames,refStr) if SC else None
+        LRU=lru(frames, refStr) if LRU else None,
+        OPT=opt(frames, refStr) if OPT else None 
+    )
     
 
-@app.get("/api/faults/array", tags=["faultsArray"])
+@app.get("/api/faults/array", tags=["faultsArray"], response_model=FaultsArray, response_model_exclude_none=True)
 async def calculate_Page_Faults_Array(
         referenceString: str, 
         maxFrames: Annotated[int, Query(title="Number of Frames", ge=c.FRAMES_MIN_VALUE, le=c.FRAMES_MAX_VALUE)] = c.FRAMES_DEFAULT_VALUE, 
@@ -127,33 +115,25 @@ async def calculate_Page_Faults_Array(
     except ValueError as ex:
         raise HTTPException(status_code=422, detail=str(ex))
 
-    # Create Response
-    resp = dict()
+    # Building response model
+    return FaultsArray(
+        InputReferenceString=refStr if debug else None,
+        FIFO = [result for result in (fifo(f, refStr) for f in range(c.FRAMES_MIN_VALUE, maxFrames + 1))] \
+            # This uses the input flag 
+            if FIFO else None,
+        # SC = [result for result in (sc(f, refStr) for f in range(c.FRAMES_MIN_VALUE, maxFrames + 1))] \
+        #    if SC else None,
+        LRU = [result for result in (lru(f, refStr) for f in range(c.FRAMES_MIN_VALUE, maxFrames + 1))] \
+            # This uses the input flag 
+            if LRU else None,
+        OPT = [result for result in (opt(f, refStr) for f in range(c.FRAMES_MIN_VALUE, maxFrames + 1))] \
+            # This uses the input flag 
+            if OPT else None,        
+    )
 
-    # Print string in debug mode
-    if debug:
-        resp["InputReferenceString"] = refStr
-
-    # Execute LRU
-    if LRU:
-        resp["LRU"] = \
-            [result for result in (lru(f, refStr) for f in range(c.FRAMES_MIN_VALUE, maxFrames + 1))]
-
-    # Execute FIFO
-    if FIFO:
-        resp["FIFO"] = \
-            [result for result in (fifo(f, refStr) for f in range(c.FRAMES_MIN_VALUE, maxFrames + 1))]
-
-    # Execute OPT
-    if OPT:
-        # resp["OPT"] = \
-        # [result for result in (opt(f, refStr) for f in range(c.FRAMES_MIN_VALUE, maxFrames + 1))]
-        pass
-
-    # Execute SC
-    if SC:
-        # resp["SC"] = \
-        # [result for result in (sc(f, refStr) for f in range(c.FRAMES_MIN_VALUE, maxFrames + 1))]
-        pass
-
-    return resp
+# TODO unify error to fast api ValidationError Schema
+#except KeyError as e:
+#    en = enum_type.__name__.lower()
+#    err = f"Invalid {en} value: {str(e).lower()}"
+#    raise RequestValidationError([ErrorWrapper(ValueError(err), ("query", en))])
+# https://github.com/tiangolo/fastapi/issues/471#issuecomment-997198600
