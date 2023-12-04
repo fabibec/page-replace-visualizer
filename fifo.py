@@ -1,15 +1,10 @@
-
-# Page replacement algorithm FIFO which takes the number of frames and an array of strings (reference strin) as input and returns the number of page faults.
 def fifo(frames, reference_string):
+    from collections import deque
+    frame_list = deque(([None] * frames), maxlen=frames)
     page_faults = 0
-    frame_list = []
-    for i in range(frames):
-        frame_list.append(None)
-    frame_index = 0
-    for i in range(len(reference_string)):
-        if reference_string[i] not in frame_list:
-            frame_list[frame_index] = reference_string[i]
-            frame_index = (frame_index + 1) % frames
+    for i in reference_string:
+        if i not in frame_list:
+            frame_list.appendleft(i)
             page_faults += 1
     return page_faults
 
