@@ -1,6 +1,11 @@
 from pydantic import BaseModel
 from enum import Enum
 
+
+class ReferenceString(BaseModel):
+    ReferenceString: str
+    Locality: bool
+
 class FaultsArray(BaseModel):
     InputReferenceString: str | None = None
     FIFO: list[int] | None = None

@@ -1,14 +1,14 @@
 from fastapi import FastAPI, HTTPException, Query
+from fastapi.exceptions import RequestValidationError
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from starlette.responses import FileResponse
 from typing import Annotated
-# from pydantic.error_wrappers import ErrorWrapper
 
 from algorithms import refStringGen, fifo, lru, opt
 import constants as c
-from response_models import Faults, FaultsArray
+from response_models import ReferenceString, Faults, FaultsArray
 from validation import validateRefString
 
 # Meta Data for documentation
@@ -58,15 +58,22 @@ app.mount("/static", StaticFiles(directory="../frontend"), name="/static")
 async def read_root():
     return FileResponse("../frontend/index.html")
 
+
 '''
 This section handles the Backend Endpoints
 '''
-@app.get("/api/refString/", tags=["referenceString"])
+@app.get("/api/refString/", tags=["referenceString"], response_model=ReferenceString)
 async def generate_Reference_String(
-        locality: Annotated[bool, Query(title="Locality creates more realistic Reference String")] = True,
-        length: Annotated[int, Query(title="The length of the Reference String", ge=c.FRAMES_MIN_VALUE, le=c.FRAMES_MAX_VALUE)] = c.FRAMES_DEFAULT_VALUE
+        length: Annotated[int, Query(title="The length of the Reference String", \
+                                    ge=c.FRAMES_MIN_VALUE, le=c.FRAMES_MAX_VALUE)] = c.FRAMES_DEFAULT_VALUE,
+        locality: Annotated[bool, Query(title="Locality creates more realistic Reference String")] = True
     ):
-    return {"ReferenceString" : refStringGen(length, locality)}
+
+    # Building response model
+    return ReferenceString(
+        ReferenceString=refStringGen(length, locality),
+        Locality=locality
+    )
 
 
 @app.get("/api/faults/", tags=["faults"], response_model=Faults, response_model_exclude_none=True)
@@ -86,6 +93,7 @@ async def calculate_Page_Faults(
         refStr = await validateRefString(referenceString, encoded=base64)
     except ValueError as ex:
         raise HTTPException(status_code=422, detail=str(ex))
+
 
     # Building response model
     return Faults(
@@ -130,10 +138,3 @@ async def calculate_Page_Faults_Array(
             # This uses the input flag 
             if OPT else None,        
     )
-
-# TODO unify error to fast api ValidationError Schema
-#except KeyError as e:
-#    en = enum_type.__name__.lower()
-#    err = f"Invalid {en} value: {str(e).lower()}"
-#    raise RequestValidationError([ErrorWrapper(ValueError(err), ("query", en))])
-# https://github.com/tiangolo/fastapi/issues/471#issuecomment-997198600
