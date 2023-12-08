@@ -6,6 +6,8 @@ from fastapi.templating import Jinja2Templates
 from starlette.responses import FileResponse
 from typing import Annotated
 
+import sys
+sys.path.append('./backend')
 from algorithms import refStringGen, fifo, lru, opt
 import constants as c
 from response_models import ReferenceString, Faults, FaultsRange, FaultsMemoryView
@@ -51,13 +53,6 @@ app = FastAPI(
 '''
 This section handles the Frontend Endpoints
 '''
-
-# Mounting the "frontend" directory to serve static files(HTML, CSS, JS)
-app.mount("/static", StaticFiles(directory="../frontend"), name="/static")
-
-# Template configuration for Jinja2
-# templates = Jinja2Templates(directory="../frontend")
-
 @app.get("/", response_class=HTMLResponse)
 async def read_root():
     return FileResponse("../frontend/index.html")
