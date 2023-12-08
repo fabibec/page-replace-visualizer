@@ -5,9 +5,9 @@ name: buildContainerImages
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "fabi" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "fabi" ]
+    branches: [ "main" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -28,14 +28,16 @@ jobs:
       - name: Build and Push Local Docker Image
         uses: docker/build-push-action@v5.1.0
         with:
-          context: ./build/local/
+          context: .
+          file: ./build/local/Dockerfile
           push: true
           tags: |
             ghcr.io/fabibec/page-replace-visualizer-local:latest
       - name: Build and Push Global Docker Image
         uses: docker/build-push-action@v5.1.0
         with:
-          context: ./build/global/
+          context: .
+          file: ./build/global/Dockerfile
           push: true
           tags: |
             ghcr.io/fabiancdng/page-replace-visualizer-global:latest
