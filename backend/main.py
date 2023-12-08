@@ -8,22 +8,26 @@ from typing import Annotated
 
 from algorithms import refStringGen, fifo, lru, opt
 import constants as c
-from response_models import ReferenceString, Faults, FaultsArray
+from response_models import ReferenceString, Faults, FaultsRange, FaultsMemoryView
 from validation import validateRefString
 
 # Meta Data for documentation
 tags_metadata = [
     {
         "name": "referenceString",
-        "description": "#TODO Description",
+        "description": "Generates a random reference string.",
     },
     {
-        "name": "faults",
-        "description": "#TODO Description",
+        "name": "compareFaults",
+        "description": "Compare the faults for different algorithms based on a certain number of frames.",
     },
     {
-        "name": "faultsArray",
-        "description": "#TODO Description",
+        "name": "compareFaultsRange",
+        "description": "Compare Page faults between different algorithms over a specified range of frames.",
+    },
+    {
+        "name": "memoryView",
+        "description": "See how an algorithm utilizes the memory given a reference string.",
     },
 ]
 
@@ -76,8 +80,8 @@ async def generate_Reference_String(
     )
 
 
-@app.get("/api/faults/", tags=["faults"], response_model=Faults, response_model_exclude_none=True)
-async def calculate_Page_Faults(
+@app.get("/api/faults/compare", tags=["compareFaults"], response_model=Faults, response_model_exclude_none=True)
+async def Page_Faults_compare(
         referenceString: str, 
         frames: Annotated[int, Query(title="The maximum Number of Frames", ge=c.FRAMES_MIN_VALUE, le=c.FRAMES_MAX_VALUE)] = c.FRAMES_DEFAULT_VALUE, 
         FIFO: Annotated[bool, Query(title="First-in-First-out Algorithm")] = True, 
@@ -105,8 +109,8 @@ async def calculate_Page_Faults(
     )
     
 
-@app.get("/api/faults/compareFrames", tags=["faultsArray"], response_model=FaultsArray, response_model_exclude_none=True)
-async def Page_Faults_compare_Frames(
+@app.get("/api/faults/compare/range", tags=["compareFaultsRange"], response_model=FaultsRange, response_model_exclude_none=True)
+async def Page_Faults_compare_over_Range(
         referenceString: str, 
         maxFrames: Annotated[int, Query(title="Number of Frames", ge=c.FRAMES_MIN_VALUE, le=c.FRAMES_MAX_VALUE)] = c.FRAMES_DEFAULT_VALUE, 
         FIFO: Annotated[bool, Query(title="First-in-First-out Algorithm")] = True, 
@@ -124,7 +128,7 @@ async def Page_Faults_compare_Frames(
         raise HTTPException(status_code=422, detail=str(ex))
 
     # Building response model
-    return FaultsArray(
+    return FaultsRange(
         InputReferenceString=refStr if debug else None,
         FIFO = [result for result in (fifo(f, refStr) for f in range(c.FRAMES_MIN_VALUE, maxFrames + 1))] \
             # This uses the input flag 
@@ -139,7 +143,7 @@ async def Page_Faults_compare_Frames(
             if OPT else None,        
     )
 
-@app.get("/api/faults/memory")
+@app.get("/api/faults/memory", tags=["memoryView"], response_model=FaultsMemoryView)
 async def Page_Faults_get_memory_view(
         referenceString: str, 
         frames: Annotated[int, Query(title="Number of Frames", ge=c.FRAMES_MIN_VALUE, le=c.FRAMES_MAX_VALUE)] = c.FRAMES_DEFAULT_VALUE, 
@@ -156,4 +160,15 @@ async def Page_Faults_get_memory_view(
     except ValueError as ex:
         raise HTTPException(status_code=422, detail=str(ex))
     
-    return fifo(frames, refStr, True)
+    # The user checks more than one algorithm just return the first one 
+    if FIFO:
+        return fifo(frames, refStr, True)
+    
+    if SC:
+        raise NotImplementedError
+    
+    if LRU:
+        return lru(frames, refStr, True)
+    
+    if OPT:
+        raise NotImplementedError

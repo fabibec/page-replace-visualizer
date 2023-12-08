@@ -1,6 +1,6 @@
 import random
 from collections import deque
-from response_models import FaultsFrame, FaultsTable, PRAlgorithm
+from response_models import FaultsMemoryFrame, FaultsMemoryView, PRAlgorithm
 
 
 def refStringGen(length, locality_mode):
@@ -27,75 +27,72 @@ def refStringGen(length, locality_mode):
     return reference_string[:-1]
 
 
-def fifo(frames : int, referenceString : list[str], memoryTable : bool) -> int | FaultsTable :
-    frame_list = deque(([None] * frames), maxlen = frames)
-    page_faults = 0 
+def fifo(frames : int, referenceString : list[str], memoryView = False) -> int | FaultsMemoryView :
+    frameList = deque(([None] * frames), maxlen = frames)
+    pageFaults = 0 
 
-    if memoryTable:
+    if memoryView:
         # create list to store memory table
         memTable = []
 
     for i in referenceString:
-        is_page_fault = False
-        if i not in frame_list:
-            frame_list.appendleft(i)
-            page_faults += 1
-            is_page_fault = True
+        isPageFault = False
+        if i not in frameList:
+            frameList.appendleft(i)
+            pageFaults += 1
+            isPageFault = True
         
-        if memoryTable:
-            f = FaultsFrame(
+        if memoryView:
+            f = FaultsMemoryFrame(
                 Index = len(memTable),
                 NeededPage = i,
-                MemoryView = list(frame_list),
-                PageFault = is_page_fault
+                MemoryView = list(frameList),
+                PageFault = isPageFault
             )
             memTable.append(f)
 
-    return page_faults if not memoryTable \
-        else FaultsTable(PageReplaceAlgorithm = PRAlgorithm.FIFO, MemoryTable = memTable)
+    return pageFaults if not memoryView \
+        else FaultsMemoryView(PageReplaceAlgorithm = PRAlgorithm.FIFO, MemoryTable = memTable)
 
 
-def lru(frames, referenceString):
+def lru(frames : int, referenceString : list[str], memoryView = False) -> int | FaultsMemoryView :
     pageFaults = 0
-    
-    # Create empty frames list
-    frameList = [None] * 9
+    frameList = [None] * frames
 
-    # Iterate through reference string ' TODO enumerate
-    for i in referenceString:
+    if memoryView:
+        # create list to store memory table
+        memTable = []
 
-        # If reference string element is not in frames list, add it to frames list
-        if i not in frameList:
+    for page in referenceString:
+        isPageFault = False
+
+        if page not in frameList:
             pageFaults += 1
+            isPageFault = True
 
-            # If there is an empty frame, add the element to the first empty frame
             if None in frameList:
-                frameList[frameList.index(None)] = i
-
-            # If there are no empty frames, remove the first element in the frame list and add the element to the end of the frame list
+                frameList.pop(frameList.index(None))
             else:
-                for j in range(len(frameList) - 1):
-                    frameList[j] = frameList[j + 1]
-                frameList[len(frameList)-1] = i
-
-        # If reference string element is in frames list, move it to the end of the frames list
+                frameList.pop(len(frameList) - 1)
+            frameList.insert(0, page)
         else:
+            currentlyUsedPage = frameList.pop(frameList.index(page))
+            frameList.insert(0, currentlyUsedPage)
 
-            # If there is an empty frame, move the element just before the first empty frame
-            if None in frameList:
-                lastElement = frameList.index(None)
-                firstElement = frameList.index(referenceString[i])
-                for j in range(firstElement, lastElement - 1):
-                    frameList[j] = frameList[j + 1]
-                frameList[lastElement-1] = referenceString[i]
+        if memoryView:
+            f = FaultsMemoryFrame(
+                Index = len(memTable),
+                NeededPage = page,
+                MemoryView = frameList,
+                PageFault = isPageFault
+            )
+            memTable.append(f)
 
-            # If there are no empty frames, move the element to the end of the frames list
-            else:
-                frameList.remove(referenceString[i])
-                frameList.append(referenceString[i])
-    return pageFaults
+    return pageFaults if not memoryView \
+        else FaultsMemoryView(PageReplaceAlgorithm = PRAlgorithm.LRU, MemoryTable = memTable)
 
 
+# New version will be used after @masterYoda8's review
 def opt(frames, referenceString):
     page_faults = 0
     frame_list = []

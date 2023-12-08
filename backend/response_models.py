@@ -1,39 +1,51 @@
-from pydantic import BaseModel
+from typing_extensions import Unpack
+from pydantic import BaseModel, Field
 from enum import Enum
+from pydantic.config import ConfigDict
 
 
 class ReferenceString(BaseModel):
-    ReferenceString: str
-    Locality: bool
+    ReferenceString: str = Field(description = "Generated reference string")
+    Locality: bool = Field(description = "Flag if locality has been used")
 
-class FaultsArray(BaseModel):
-    InputReferenceString: str | None = None
-    FIFO: list[int] | None = None
-    SC: list[int] | None = None
-    LRU: list[int] | None = None
-    OPT: list[int] | None = None
+
+class FaultsRange(BaseModel):
+    InputReferenceString: str | None = Field(default = None, description = "Returned if debug flag is set")
+    FIFO: list[int] | None = Field(default = None, description = "Range of page faults for FIFO")
+    SC: list[int] | None = Field(default = None, description = "Range of page faults for SC")
+    LRU: list[int] | None = Field(default = None, description = "Range of page faults for LRU")
+    OPT: list[int] | None = Field(default = None, description = "Range of page faults for OPT")
+
 
 class Faults(BaseModel):
-    InputReferenceString: str | None = None
-    FIFO: int | None = None
-    SC: int | None = None
-    LRU: int | None = None
-    OPT: int | None = None
-    
+    InputReferenceString: str | None = Field(default = None, description = "Returned if debug flag is set")
+    FIFO: int | None = Field(default = None, description = "Page faults for FIFO")
+    SC: int | None = Field(default = None, description = "Page faults for SC")
+    LRU: int | None = Field(default = None, description = "Page faults for LRU")
+    OPT: int | None = Field(default = None, description = "Page faults for OPT")
+
+
 class PRAlgorithm(str, Enum):
     FIFO = "FIFO"
     SC = "SC"
     LRU = "LRU"
     OPT = "OPT"
 
-class FaultsFrame(BaseModel):
-    Index: int 
-    NeededPage: str
-    MemoryView: list[str | None]
-    PageFault: bool = False
-    
-class FaultsTable(BaseModel):
-    PageReplaceAlgorithm: PRAlgorithm 
-    MemoryTable: list[FaultsFrame]
+
+class FaultsMemoryFrame(BaseModel):
+    Index: int = Field(description = "Index of current frame")
+    NeededPage: str = Field(description = "Page that should be accessed in the current Frame")
+    MemoryView: list[str | None] = Field(description = "Current allocation of the memory")
+    PageFault: bool = Field(default = False, description = "Flag if a page fault occurred in current frame")
+
+
+class FaultsMemoryFrameSC(FaultsMemoryFrame):
+    CursorPosition: int = Field(description = "Position of the SC cursor after performing the current operation")
+    ModifiedBit: int = Field(description = "Value of the modified bit")
+
+   
+class FaultsMemoryView(BaseModel):
+    PageReplaceAlgorithm: PRAlgorithm = Field(description = "Name of the page replacement algorithm used")
+    MemoryTable: list[FaultsMemoryFrame] = Field(description = "List of the memory frames")
 
 
