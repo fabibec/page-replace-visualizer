@@ -40,4 +40,4 @@ jobs:
           file: ./build/global/Dockerfile
           push: true
           tags: |
-            ghcr.io/fabiancdng/page-replace-visualizer-global:latest
+            ghcr.io/fabibec/page-replace-visualizer-global:latest
