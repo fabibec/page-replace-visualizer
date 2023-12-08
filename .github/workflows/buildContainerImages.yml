@@ -24,7 +24,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.CONTAINER_TOKEN }}
       - name: Build and Push Local Docker Image
         uses: docker/build-push-action@v5.1.0
         with:
@@ -32,7 +32,7 @@ jobs:
           file: ./build/local/Dockerfile
           push: true
           tags: |
-            ghcr.io/fabibec/page-replace-visualizer-local:latest
+            ghcr.io/${{ github.repository }}-local:latest
       - name: Build and Push Global Docker Image
         uses: docker/build-push-action@v5.1.0
         with:
@@ -40,4 +40,4 @@ jobs:
           file: ./build/global/Dockerfile
           push: true
           tags: |
-            ghcr.io/fabibec/page-replace-visualizer-global:latest
+            ghcr.io/${{ github.repository }}-global:latest
