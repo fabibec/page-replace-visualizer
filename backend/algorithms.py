@@ -1,5 +1,6 @@
 import random
 from collections import deque
+from response_models import FaultsFrame, FaultsTable, PRAlgorithm
 
 
 def refStringGen(length, locality_mode):
@@ -26,39 +27,56 @@ def refStringGen(length, locality_mode):
     return reference_string[:-1]
 
 
-def fifo(frames, referenceString):
-    frame_list = deque(([None] * frames), maxlen=frames)
-    page_faults = 0
+def fifo(frames : int, referenceString : list[str], memoryTable : bool) -> int | FaultsTable :
+    frame_list = deque(([None] * frames), maxlen = frames)
+    page_faults = 0 
+
+    if memoryTable:
+        # create list to store memory table
+        memTable = []
+
     for i in referenceString:
+        is_page_fault = False
         if i not in frame_list:
             frame_list.appendleft(i)
             page_faults += 1
-    return page_faults
+            is_page_fault = True
+        
+        if memoryTable:
+            f = FaultsFrame(
+                Index = len(memTable),
+                NeededPage = i,
+                MemoryView = list(frame_list),
+                PageFault = is_page_fault
+            )
+            memTable.append(f)
+
+    return page_faults if not memoryTable \
+        else FaultsTable(PageReplaceAlgorithm = PRAlgorithm.FIFO, MemoryTable = memTable)
 
 
 def lru(frames, referenceString):
     pageFaults = 0
-    frameList = []
+    
     # Create empty frames list
-    for i in range(frames):
-        frameList.append(None)
+    frameList = [None] * 9
 
-    # Iterate through reference string
-    for i in range(len(referenceString)):
+    # Iterate through reference string ' TODO enumerate
+    for i in referenceString:
 
         # If reference string element is not in frames list, add it to frames list
-        if referenceString[i] not in frameList:
+        if i not in frameList:
             pageFaults += 1
 
             # If there is an empty frame, add the element to the first empty frame
             if None in frameList:
-                frameList[frameList.index(None)] = referenceString[i]
+                frameList[frameList.index(None)] = i
 
             # If there are no empty frames, remove the first element in the frame list and add the element to the end of the frame list
             else:
                 for j in range(len(frameList) - 1):
                     frameList[j] = frameList[j + 1]
-                frameList[len(frameList)-1] = referenceString[i]
+                frameList[len(frameList)-1] = i
 
         # If reference string element is in frames list, move it to the end of the frames list
         else:

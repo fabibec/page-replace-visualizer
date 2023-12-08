@@ -105,8 +105,8 @@ async def calculate_Page_Faults(
     )
     
 
-@app.get("/api/faults/array", tags=["faultsArray"], response_model=FaultsArray, response_model_exclude_none=True)
-async def calculate_Page_Faults_Array(
+@app.get("/api/faults/compareFrames", tags=["faultsArray"], response_model=FaultsArray, response_model_exclude_none=True)
+async def Page_Faults_compare_Frames(
         referenceString: str, 
         maxFrames: Annotated[int, Query(title="Number of Frames", ge=c.FRAMES_MIN_VALUE, le=c.FRAMES_MAX_VALUE)] = c.FRAMES_DEFAULT_VALUE, 
         FIFO: Annotated[bool, Query(title="First-in-First-out Algorithm")] = True, 
@@ -138,3 +138,22 @@ async def calculate_Page_Faults_Array(
             # This uses the input flag 
             if OPT else None,        
     )
+
+@app.get("/api/faults/memory")
+async def Page_Faults_get_memory_view(
+        referenceString: str, 
+        frames: Annotated[int, Query(title="Number of Frames", ge=c.FRAMES_MIN_VALUE, le=c.FRAMES_MAX_VALUE)] = c.FRAMES_DEFAULT_VALUE, 
+        FIFO: Annotated[bool, Query(title="First-in-First-out Algorithm")] = True, 
+        SC: Annotated[bool, Query(title="Second-Chance Algorithm")] = True, 
+        LRU: Annotated[bool, Query(title="Least Recent Use Algorithm")] = False, 
+        OPT: Annotated[bool, Query(title="Optimal Algorithm")] = False,
+        base64: Annotated[bool, Query(title="Uses base64 encoded string as input")] = True
+    ):
+
+    # Validating and decoding reference string
+    try:
+        refStr = await validateRefString(referenceString, encoded=base64)
+    except ValueError as ex:
+        raise HTTPException(status_code=422, detail=str(ex))
+    
+    return fifo(frames, refStr, True)

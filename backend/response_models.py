@@ -20,14 +20,20 @@ class Faults(BaseModel):
     LRU: int | None = None
     OPT: int | None = None
     
-class Algorithm(str, Enum):
+class PRAlgorithm(str, Enum):
     FIFO = "FIFO"
     SC = "SC"
     LRU = "LRU"
     OPT = "OPT"
+
+class FaultsFrame(BaseModel):
+    Index: int 
+    NeededPage: str
+    MemoryView: list[str | None]
+    PageFault: bool = False
     
 class FaultsTable(BaseModel):
-    # TODO: build the response model for the memory visualization
-    PageReplaceAlgorithm: Algorithm 
-    MemoryTable: list[str] | None = None
+    PageReplaceAlgorithm: PRAlgorithm 
+    MemoryTable: list[FaultsFrame]
+
 
