@@ -1,0 +1,41 @@
+# This is a workflow builds the Docker Images used to run this project localy and on our server
+
+name: buildContainerImages
+
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "fabi" ]
+  pull_request:
+    branches: [ "fabi" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3.0.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and Push Local Docker Image
+        uses: docker/build-push-action@v5.1.0
+        with:
+          context: ./build/local/
+          push: true
+          tags: |
+            ghcr.io/fabibec/page-replace-visualizer-local:latest
+      - name: Build and Push Global Docker Image
+        uses: docker/build-push-action@v5.1.0
+        with:
+          context: ./build/global/
+          push: true
+          tags: |
+            ghcr.io/fabiancdng/page-replace-visualizer-global:latest
