@@ -1,36 +1,32 @@
 def optimal(frames, reference_string):
     page_faults = 0
-    frame_list = []
-    for i in range(0, frames):
-        frame_list.append(None)
-    for i in range(0, len(reference_string)):
-        flag = False
-        # Check if page is already present in frame
-        for j in range(0, frames):
-            if frame_list[j] == reference_string[i]:
-                flag = True
-                break
-        # Find victim page
-        if flag == False:
-            max = -1
-            index = -1
-            for j in range(0, frames):
-                # If frame is empty, replace it
-                if frame_list[j] == None:
-                    index = j
-                    break
-                else:
+    frame_list = [None] * frames
+
+    # Iterate through the reference string
+    for i, page in enumerate(reference_string):
+
+        if page not in frame_list:
+
+            # If there is an empty frame, replace it
+            if None in frame_list:
+                frame_list[frame_list.index(None)] = page
+
+            else:
+                max = -1
+                index = -1
+                # Find the page that will not be used for the longest time
+                for j, p in enumerate(frame_list):
                     temp = 0
-                    for k in range(i + 1, len(reference_string)):
-                        if frame_list[j] == reference_string[k]:
+                    for s in reference_string[i+1:]:
+                        if s == p:
                             break
                         else:
                             temp += 1
-                    if temp > max:
-                        max = temp
-                        index = j
-            # Replace victim page with new page
-            frame_list[index] = reference_string[i]
+                        if temp > max:
+                            max = temp
+                            index = j
+                # Replace victim page with new page
+                frame_list[index] = page
             page_faults += 1
     return page_faults
 
