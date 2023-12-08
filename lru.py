@@ -1,44 +1,26 @@
-
 def lru(frames, referenceString):
     pageFaults = 0
-    frameList = []
-    # Create empty frames list
-    for i in range(frames):
-        frameList.append(None)
+    frameList = [None] * frames
 
-    # Iterate through reference string
-    for i in range(len(referenceString)):
+    for page in referenceString:
 
-        # If reference string element is not in frames list, add it to frames list
-        if referenceString[i] not in frameList:
+        if page not in frameList:
             pageFaults += 1
 
-            # If there is an empty frame, add the element to the first empty frame
             if None in frameList:
-                frameList[frameList.index(None)] = referenceString[i]
+                frameList.pop(frameList.index(None))
 
-            # If there are no emtpy frames, remove the first element in the frame list and add the element to the end of the frame list
             else:
-                for j in range(len(frameList) - 1):
-                    frameList[j] = frameList[j + 1]
-                frameList[len(frameList)-1] = referenceString[i]
+                frameList.pop(len(frameList) - 1)
 
-        # If reference string element is in frames list, move it to the end of the frames list
+            frameList.insert(0, page)
+
         else:
+            currentlyUsedPage = frameList.pop(frameList.index(page))
+            frameList.insert(0, currentlyUsedPage)
 
-            # If there is an empty frame, move the element just before the first empty frame
-            if None in frameList:
-                lastElement = frameList.index(None)
-                firstElement = frameList.index(referenceString[i])
-                for j in range(firstElement, lastElement - 1):
-                    frameList[j] = frameList[j + 1]
-                frameList[lastElement-1] = referenceString[i]
-
-            # If there are no empty frames, move the element to the end of the frames list
-            else:
-                frameList.remove(referenceString[i])
-                frameList.append(referenceString[i])
     return pageFaults
+
 
 
 def lruTest():
