@@ -2,11 +2,12 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <link rel="stylesheet" href="{{ url_for('frontend', path='/spectre-0.5.9/dist/spectre.min.css') }}" />
     <link rel="stylesheet" href="{{ url_for('frontend', path='/spectre-0.5.9/dist/spectre-exp.min.css') }}" />
     <link rel="stylesheet" href="{{ url_for('frontend', path='/spectre-0.5.9/dist/spectre-icons.min.css') }}" />
     <link rel="stylesheet" href="{{ url_for('frontend', path='/styles.css') }}" />
-    <title>{% block title %}OS - Page Replacement{% endblock %}</title>
+    <title>{% block title %}Page replacement visualizer{% endblock %}</title>
   </head>
 
   <body>
