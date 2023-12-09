@@ -1,15 +1,11 @@
-* {
-    box-sizing: border-box;
+html {
+  margin: 0;
+  padding: 0;
 }
 
-.column {
-    float: left;
-    width: 50%;
+.seperator {
+  height: 2px;
+  border-width: 0;
+  color: #3b4351;
+  background-color: #3b4351;
 }
-  
-/* Clear floats after the columns */
-.row:after {
-    content: "";
-    display: table;
-    clear: both;
-} 

@@ -1,42 +1,328 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-* {
-  box-sizing: border-box;
-}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="./spectre-0.5.9/dist/spectre.min.css" />
+    <link rel="stylesheet" href="./spectre-0.5.9/dist/spectre-exp.min.css" />
+    <link rel="stylesheet" href="./spectre-0.5.9/dist/spectre-icons.min.css" />
+    <link rel="stylesheet" href="./styles.css" />
+    <title>OS - Page Replacement</title>
+  </head>
 
-/* Create two equal columns that floats next to each other */
-.column {
-  float: left;
-  width: 50%;
-  padding: 10px;
-  height: 300px; /* Should be removed. Only for demonstration */
-}
+  <body>
+    <header class="text-center">
+      <h1>Page replace visualizer</h1>
+    </header>
 
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-</style>
-</head>
-<body>
+    <main class="container">
+      <div class="columns">
+        <div class="column col-8 col-md-12 col-mx-auto">
+          <p>
+            Page replacement algorithms are essential in computer science,
+            particularly in managing memory efficiently. As systems encounter
+            memory shortages, these algorithms play a vital role in deciding which
+            pages should be swapped out from memory (page eviction) to accommodate
+            new ones (page allocation). Visualizing these algorithms provides a
+            clearer understanding of their functionality and performance. This web
+            page serves as a visual aid to comprehend and compare popular page
+            replacement algorithms, namely First-In-First-Out (FIFO), Optimal
+            (OPT), Second Chance, and Least Recently Used (LRU). Leveraging the
+            power of Chart.js, a dynamic and intuitive JavaScript library, we
+            depict the behavior and efficiency of these algorithms in managing
+            memory pages.
+          </p>
+          <!--p>
+            <strong>FIFO Algorithm:</strong>
+            FIFO operates on the principle of evicting the oldest page in memory.
+            It maintains a queue of pages and replaces the page that entered the
+            memory earliest.
+          </p>
+          <p>
+            <strong>Optimal Algorithm:</strong>
+            OPT, an idealistic algorithm, removes the page that won't be used for
+            the longest duration in the future. It assumes perfect knowledge of
+            future references, making it a benchmark for comparison.
+          </p>
+          <p>
+            <strong>Second Chance Algorithm:</strong>
+            Second Chance, a variation of FIFO, includes a reference bit to give
+            pages a "second chance" before eviction. If a page is referenced again
+            before eviction, it's moved to the end of the queue.
+          </p>
+          <p>
+            <strong>LRU Algorithm:</strong>
+            LRU replaces the least recently used page. It relies on the principle
+            that pages used in the recent past are less likely to be used soon,
+            making them candidates for replacement.
+          </p>
+          <p>
+            Through interactive Chart.js visualizations, this webpage illustrates
+            the number of page faults incurred by each algorithm under various
+            scenarios. Users can explore and compare the efficiency of these
+            algorithms in managing memory resources, gaining insights into their
+            strengths and limitations.
+          </p>
+          <p>
+            Explore the dynamic charts provided to witness the behavior of these
+            algorithms and gain a deeper understanding of their impact on system
+            performance.
+          </p-->
+        </div>
+      </div>
+      <div class="columns">
+        <div class="column col-4 col-md-12 col-mx-auto">
+          <hr class="seperator" />
+        </div>
+      </div>
+      <div class="text-center">
+        <h4 class="s-subtitle">Settings</h4>
+      </div>
+      <div class="columns">
+        <div class="column col-8 col-md-12 col-mx-auto text-center">
+          <p>
+            To be able to start, a valid reference string must first be created.
+            You can either have this generated or enter it yourself (1, 3, 4, 5,
+            2, ...). When generating, you also have the advantage of activating
+            localization in order to obtain a more realistic output.
+          </p>
+        </div>
+      </div>
+      <div class="columns">
+        <div class="column col-5 col-md-12 col-mx-auto">
+          <div class="columns">
+            <div class="column col-12 col-md-12">
+              <form class="form-horizontal">
+                <div class="form-group">
+                  <div class="col-2">
+                    <label class="form-label" for="lengthInpt">Length:</label>
+                  </div>
+                  <div class="col-3">
+                    <div class="float-right">
+                      <input
+                        class="form-input"
+                        id="lengthInpt"
+                        type="number"
+                        placeholder="00"
+                        value="1"
+                        max="30"
+                        min="4"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-2"></div>
+                  <div class="col-3">
+                    <label class="form-label" for="localizationTggl"
+                      >Localization:</label
+                    >
+                  </div>
+                  <div class="col-2">
+                    <label class="form-switch float-right">
+                      <input type="checkbox" id="localizationTggl" />
+                      <i class="form-icon"></i>
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-12 col-md-12">
+                    <div class="float-right">
+                      <button class="btn btn-primary" id="generateBtn">Generate</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-12 col-md-12">
+                    <div class="form-group has-icon-right">
+                      <input
+                        class="form-input"
+                        type="text"
+                        id="refStringInpt"
+                        placeholder="Type in or generate reference string"
+                      />
+                      <!--i class="form-icon loading"></i-->
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="columns">
+        <div class="column col-4 col-md-12 col-mx-auto">
+          <hr class="seperator" />
+        </div>
+      </div>
+      <div class="text-center">
+        <h4 class="s-subtitle">Faults by specific frame size</h4>
+      </div>
+      <div class="columns">
+        <div class="column col-5 col-md-12 col-mx-auto">
+          <form class="form-horizontal">
+            <div class="form-group columns">
+              <div class="column col-1"></div>
+              <div class="column col-2">
+                <label class="form-checkbox">
+                  <input type="checkbox" id="faultsAllSlct" /><i class="form-icon"></i>All
+                </label>
+              </div>
+              <div class="column col-2">
+                <label class="form-checkbox">
+                  <input type="checkbox" id="faultsFifoSlct" /><i class="form-icon"></i>
+                  FIFO
+                </label>
+              </div>
 
-<h2>Two Equal Columns</h2>
+              <div class="column col-2">
+                <label class="form-checkbox form-inline">
+                  <input type="checkbox" id="faultsOptSlct"/><i class="form-icon"></i>
+                  OPT
+                </label>
+              </div>
 
-<div class="row">
-  <div class="column" style="background-color:#aaa;">
-    <h2>Column 1</h2>
-    <p>Some text..</p>
-  </div>
-  <div class="column" style="background-color:#bbb;">
-    <h2>Column 2</h2>
-    <p>Some text..</p>
-  </div>
-</div>
+              <div class="column col-2">
+                <label class="form-checkbox form-inline">
+                  <input type="checkbox" id="faultsScSlct" /><i class="form-icon"></i>
+                  SC
+                </label>
+              </div>
 
-</body>
+              <div class="column col-2">
+                <label class="form-checkbox form-inline">
+                  <input type="checkbox" id="faultsLruSlct" /><i class="form-icon"></i>
+                  LRU
+                </label>
+              </div>
+              <div class="column col-1"></div>
+            </div>
+            <div class="form-group columns">
+              <!--div class="col-1"></div-->
+              <div class="col-2 col-md-4">
+                <label class="form-label" for="frameInpt">Frames:</label>
+              </div>
+              <div class="col-2 col-md-4">
+                <div class="float-right">
+                  <input
+                    class="form-input"
+                    id="frameInpt"
+                    type="number"
+                    placeholder="00"
+                    value="2"
+                    max="30"
+                    min="2"
+                  />
+                </div>
+              </div>
+              <div class="col-8 col-md-4">
+                <div class="float-right">
+                  <button class="btn" id="faultsCompareBtn">Compare</button>
+                </div>
+              </div>
+              <!--div class="col-1"></div-->
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="columns">
+        <div class="column col-4 col-md-12 col-mx-auto">
+          <hr class="seperator" />
+        </div>
+      </div>
+      <div class="text-center">
+        <h4 class="s-subtitle">Faults by specific frame size</h4>
+      </div>
+      <div class="columns">
+        <div class="column col-5 col-md-12 col-mx-auto">
+          <form class="form-horizontal">
+            <div class="form-group columns">
+              <div class="column col-1"></div>
+              <div class="column col-2">
+                <label class="form-checkbox">
+                  <input type="checkbox" /><i class="form-icon"></i>All
+                </label>
+              </div>
+              <div class="column col-2">
+                <label class="form-checkbox">
+                  <input type="checkbox" checked="" /><i class="form-icon"></i>
+                  FIFO
+                </label>
+              </div>
+
+              <div class="column col-2">
+                <label class="form-checkbox form-inline">
+                  <input type="checkbox" checked="" /><i class="form-icon"></i>
+                  OPT
+                </label>
+              </div>
+
+              <div class="column col-2">
+                <label class="form-checkbox form-inline">
+                  <input type="checkbox" checked="" /><i class="form-icon"></i>
+                  SC
+                </label>
+              </div>
+
+              <div class="column col-2">
+                <label class="form-checkbox form-inline">
+                  <input type="checkbox" checked="" /><i class="form-icon"></i>
+                  LRU
+                </label>
+              </div>
+              <div class="column col-1"></div>
+            </div>
+            <div class="form-group columns">
+              <!--div class="col-1"></div-->
+              <div class="col-2 col-md-4">
+                <label class="form-label" for="lengthInput">Frames from:</label>
+              </div>
+              <div class="col-2 col-md-4">
+                <div class="float-right">
+                  <input
+                    class="form-input"
+                    id="lengthInput"
+                    type="number"
+                    placeholder="00"
+                    value="2"
+                    max="30"
+                    min="2"
+                  />
+                </div>
+              </div>
+              <div class="col-1"></div>
+              <div class="col-2 col-md-4">
+                <label class="form-label" for="lengthInput">to:</label>
+              </div>
+              <div class="col-2 col-md-4">
+                <div class="float-right">
+                  <input
+                    class="form-input"
+                    id="lengthInput"
+                    type="number"
+                    placeholder="00"
+                    value="2"
+                    max="30"
+                    min="2"
+                  />
+                </div>
+              </div>
+              <div class="col-3 col-md-4">
+                <div class="float-right">
+                  <button class="btn">Compare</button>
+                </div>
+              </div>
+              <!--div class="col-1"></div-->
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="columns">
+        <div class="column col-4 col-md-12 col-mx-auto">
+          <hr class="seperator" />
+        </div>
+      </div>
+      <div class="text-center">
+        <h4 class="s-subtitle">Impressum</h4>
+      </div>
+    </main>
+    <script src="./script.js"></script>
+  </body>
 </html>
