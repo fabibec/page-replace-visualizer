@@ -1,9 +1,7 @@
 from fastapi import FastAPI, HTTPException, Query, Request
-from fastapi.exceptions import RequestValidationError
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
-from starlette.responses import FileResponse
 from typing import Annotated
 
 import sys
@@ -50,12 +48,28 @@ app = FastAPI(
 )
 
 
+
 '''
 This section handles the Frontend Endpoints
 '''
-@app.get("/", response_class=HTMLResponse)
-async def read_root():
-    return FileResponse("./frontend/index.html")
+app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
+templates = Jinja2Templates(directory="frontend")
+
+@app.get("/", response_class = HTMLResponse, include_in_schema= False)
+async def home(request: Request):
+    return templates.TemplateResponse("home.html", {"request": request})
+
+@app.get("/visualize", response_class = HTMLResponse, include_in_schema= False)
+async def visualize(request: Request):
+    return templates.TemplateResponse("visualize.html", {"request": request})
+
+@app.get("/algorithms", response_class = HTMLResponse, include_in_schema= False)
+async def algorithms(request: Request):
+    return templates.TemplateResponse("algorithms.html", {"request": request})
+
+@app.get("/imprint", response_class = HTMLResponse, include_in_schema= False)
+async def imprint(request: Request):
+    return templates.TemplateResponse("imprint.html", {"request": request})
 
 @app.exception_handler(404)
 async def not_found_exception_handler(request: Request, exc: HTTPException):

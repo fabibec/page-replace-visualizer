@@ -9,3 +9,10 @@ html {
   color: #3b4351;
   background-color: #3b4351;
 }
+
+.navbar {
+  margin: 1rem;
+  .navbar-brand {
+    font-size: 1.5rem;
+  }
+}

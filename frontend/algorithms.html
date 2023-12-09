@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}OS - Page Replacement{% endblock %}
+{% block content %}
+<main class="container">
+  <div class="text-center">
+      <p>
+        <strong>FIFO Algorithm:</strong>
+        FIFO operates on the principle of evicting the oldest page in memory.
+        It maintains a queue of pages and replaces the page that entered the
+        memory earliest.
+      </p>
+      <p>
+        <strong>Optimal Algorithm:</strong>
+        OPT, an idealistic algorithm, removes the page that won't be used for
+        the longest duration in the future. It assumes perfect knowledge of
+        future references, making it a benchmark for comparison.
+      </p>
+      <p>
+        <strong>Second Chance Algorithm:</strong>
+        Second Chance, a variation of FIFO, includes a reference bit to give
+        pages a "second chance" before eviction. If a page is referenced again
+        before eviction, it's moved to the end of the queue.
+      </p>
+      <p>
+        <strong>LRU Algorithm:</strong>
+        LRU replaces the least recently used page. It relies on the principle
+        that pages used in the recent past are less likely to be used soon,
+        making them candidates for replacement.
+      </p>
+      <p>
+        Through interactive Chart.js visualizations, this webpage illustrates
+        the number of page faults incurred by each algorithm under various
+        scenarios. Users can explore and compare the efficiency of these
+        algorithms in managing memory resources, gaining insights into their
+        strengths and limitations.
+      </p>
+      <p>
+        Explore the dynamic charts provided to witness the behavior of these
+        algorithms and gain a deeper understanding of their impact on system
+        performance.
+      </p>
+  </div>
+  <div class="columns">
+    <div class="column col-4 col-md-12 col-mx-auto">
+      <hr class="seperator" />
+    </div>
+</main>
+{% endblock%}
