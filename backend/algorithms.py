@@ -92,39 +92,52 @@ def lru(frames : int, referenceString : list[str], memoryView = False) -> int | 
         else FaultsMemoryView(PageReplaceAlgorithm = PRAlgorithm.LRU, MemoryTable = memTable)
 
 
-# New version will be used after @masterYoda8's review
-def opt(frames, referenceString):
-    page_faults = 0
-    frame_list = []
-    for i in range(0, frames):
-        frame_list.append(None)
-    for i in range(0, len(referenceString)):
-        flag = False
-        # Check if page is already present in frame
-        for j in range(0, frames):
-            if frame_list[j] == referenceString[i]:
-                flag = True
-                break
-        # Find victim page
-        if flag == False:
-            max = -1
-            index = -1
-            for j in range(0, frames):
-                # If frame is empty, replace it
-                if frame_list[j] == None:
-                    index = j
-                    break
-                else:
+def opt(frames : int, referenceString : list[str], memoryView = False) -> int | FaultsMemoryView:
+    pageFaults = 0
+    frameList = [None] * frames
+
+    if memoryView:
+        # create list to store memory table
+        memTable = []
+
+    # Iterate through the reference string
+    for i, page in enumerate(referenceString):
+        isPageFault = False
+
+        if page not in frameList:
+
+            # If there is an empty frame, replace it
+            if None in frameList:
+                frameList[frameList.index(None)] = page
+
+            else:
+                max = -1
+                index = -1
+                # Find the page that will not be used for the longest time
+                for j, p in enumerate(frameList):
                     temp = 0
-                    for k in range(i + 1, len(referenceString)):
-                        if frame_list[j] == referenceString[k]:
+                    for s in referenceString[i+1:]:
+                        if s == p:
                             break
                         else:
                             temp += 1
-                    if temp > max:
-                        max = temp
-                        index = j
-            # Replace victim page with new page
-            frame_list[index] = referenceString[i]
-            page_faults += 1
-    return page_faults
+                        if temp > max:
+                            max = temp
+                            index = j
+                # Replace victim page with new page
+                frameList[index] = page
+            
+            pageFaults += 1
+            isPageFault = True
+
+        if memoryView:
+            f = FaultsMemoryFrame(
+                Index = len(memTable),
+                NeededPage = page,
+                MemoryView = frameList,
+                PageFault = isPageFault
+            )
+            memTable.append(f)
+    
+    return pageFaults if not memoryView \
+        else FaultsMemoryView(PageReplaceAlgorithm = PRAlgorithm.OPT, MemoryTable = memTable)

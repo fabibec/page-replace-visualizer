@@ -1,7 +1,7 @@
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from starlette.responses import FileResponse
 from typing import Annotated
@@ -55,7 +55,11 @@ This section handles the Frontend Endpoints
 '''
 @app.get("/", response_class=HTMLResponse)
 async def read_root():
-    return FileResponse("../frontend/index.html")
+    return FileResponse("./frontend/index.html")
+
+@app.exception_handler(404)
+async def not_found_exception_handler(request: Request, exc: HTTPException):
+    return RedirectResponse('https://en.wikipedia.org/wiki/HTTP_404')
 
 
 '''
@@ -83,7 +87,7 @@ async def Page_Faults_compare(
         SC: Annotated[bool, Query(title="Second-Chance Algorithm")] = True, 
         LRU: Annotated[bool, Query(title="Least Recent Use Algorithm")] = False, 
         OPT: Annotated[bool, Query(title="Optimal Algorithm")] = False,
-        base64: Annotated[bool, Query(title="Uses base64 encoded string as input")] = True,
+        base64: Annotated[bool, Query(title="Uses base64 encoded string as input")] = False,
         debug: Annotated[bool, Query(title="Includes decoded string in response")] = False
     ):
 
@@ -112,7 +116,7 @@ async def Page_Faults_compare_over_Range(
         SC: Annotated[bool, Query(title="Second-Chance Algorithm")] = True, 
         LRU: Annotated[bool, Query(title="Least Recent Use Algorithm")] = False, 
         OPT: Annotated[bool, Query(title="Optimal Algorithm")] = False,
-        base64: Annotated[bool, Query(title="Uses base64 encoded string as input")] = True,
+        base64: Annotated[bool, Query(title="Uses base64 encoded string as input")] = False,
         debug: Annotated[bool, Query(title="Includes decoded string in response")] = False
     ):
 
@@ -143,10 +147,10 @@ async def Page_Faults_get_memory_view(
         referenceString: str, 
         frames: Annotated[int, Query(title="Number of Frames", ge=c.FRAMES_MIN_VALUE, le=c.FRAMES_MAX_VALUE)] = c.FRAMES_DEFAULT_VALUE, 
         FIFO: Annotated[bool, Query(title="First-in-First-out Algorithm")] = True, 
-        SC: Annotated[bool, Query(title="Second-Chance Algorithm")] = True, 
+        SC: Annotated[bool, Query(title="Second-Chance Algorithm")] = False, 
         LRU: Annotated[bool, Query(title="Least Recent Use Algorithm")] = False, 
         OPT: Annotated[bool, Query(title="Optimal Algorithm")] = False,
-        base64: Annotated[bool, Query(title="Uses base64 encoded string as input")] = True
+        base64: Annotated[bool, Query(title="Uses base64 encoded string as input")] = False
     ):
 
     # Validating and decoding reference string
@@ -166,4 +170,4 @@ async def Page_Faults_get_memory_view(
         return lru(frames, refStr, True)
     
     if OPT:
-        raise NotImplementedError
+        return opt(frames, refStr, True)
