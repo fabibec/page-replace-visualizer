@@ -1,8 +1,11 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
+html {
+  margin: 0;
+  padding: 0;
 }
 
-h1 {
-    color: #333;
+.seperator {
+  height: 2px;
+  border-width: 0;
+  color: #3b4351;
+  background-color: #3b4351;
 }
