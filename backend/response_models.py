@@ -7,12 +7,17 @@ class ReferenceString(BaseModel):
     Locality: bool = Field(description = "Flag if locality has been used")
 
 
+class FaultsRangeItem(BaseModel):
+    Frames: int = Field(description= "Current space of the simulated memory")
+    Faults: int = Field(description= "Page fault that occurred with the specific memory size")
+
+
 class FaultsRange(BaseModel):
     InputReferenceString: str | None = Field(default = None, description = "Returned if debug flag is set")
-    FIFO: list[int] | None = Field(default = None, description = "Range of page faults for FIFO")
-    SC: list[int] | None = Field(default = None, description = "Range of page faults for SC")
-    LRU: list[int] | None = Field(default = None, description = "Range of page faults for LRU")
-    OPT: list[int] | None = Field(default = None, description = "Range of page faults for OPT")
+    FIFO: list[FaultsRangeItem] | None = Field(default = None, description = "Range of page faults for FIFO")
+    SC: list[FaultsRangeItem] | None = Field(default = None, description = "Range of page faults for SC")
+    LRU: list[FaultsRangeItem] | None = Field(default = None, description = "Range of page faults for LRU")
+    OPT: list[FaultsRangeItem] | None = Field(default = None, description = "Range of page faults for OPT")
 
 
 class Faults(BaseModel):

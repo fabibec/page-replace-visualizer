@@ -41,3 +41,9 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ github.repository }}-global:latest
+      - name: Trigger hosted image refresh
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: ${{ secrets.WATCHTOWER_API_ENDPOINT }}
+          bearerToken: ${{ secrets.WATCHTOWER_API_KEY }}
+

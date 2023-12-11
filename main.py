@@ -8,7 +8,7 @@ import sys
 sys.path.append('./backend')
 from algorithms import refStringGen, fifo, lru, opt
 import constants as c
-from response_models import ReferenceString, Faults, FaultsRange, FaultsMemoryView
+from response_models import ReferenceString, Faults, FaultsRange, FaultsMemoryView, FaultsRangeItem
 from validation import validateRefString, validateRange
 
 # Meta Data for documentation
@@ -145,17 +145,20 @@ async def Page_Faults_compare_over_Range(
     # Building response model
     return FaultsRange(
         InputReferenceString= ','.join(refStr) if debug else None,
-        FIFO = [result for result in (fifo(f, refStr) for f in range(minFrames, maxFrames + 1))] \
-            # This uses the input flag 
-            if FIFO else None,
+        FIFO = [FaultsRangeItem(Frames = f, Faults = result) \
+                for f, result in enumerate((fifo(f, refStr) for f in range(minFrames, maxFrames + 1)), start = minFrames)] \
+                # This uses the input flag 
+                if FIFO else None,
         # SC = [result for result in (sc(f, refStr) for f in range(minFrames, maxFrames + 1))] \
         #    if SC else None,
-        LRU = [result for result in (lru(f, refStr) for f in range(minFrames, maxFrames + 1))] \
-            # This uses the input flag 
-            if LRU else None,
-        OPT = [result for result in (opt(f, refStr) for f in range(minFrames, maxFrames + 1))] \
-            # This uses the input flag 
-            if OPT else None,        
+        LRU = [FaultsRangeItem(Frames = f, Faults = result) \
+               for f, result in enumerate((lru(f, refStr) for f in range(minFrames, maxFrames + 1)), start = minFrames)] \
+                # This uses the input flag 
+                if LRU else None,
+        OPT = [FaultsRangeItem(Frames = f, Faults = result) \
+               for f, result in enumerate((opt(f, refStr) for f in range(minFrames, maxFrames + 1)), start = minFrames)] \
+                # This uses the input flag 
+                if OPT else None,        
     )
 
 @app.get("/api/faults/memory", tags=["memoryView"], response_model=FaultsMemoryView)

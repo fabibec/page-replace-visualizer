@@ -3,28 +3,28 @@ from collections import deque
 from response_models import FaultsMemoryFrame, FaultsMemoryView, PRAlgorithm
 
 
-def refStringGen(length, locality_mode):
-    reference_string = ""
+def refStringGen(length, localityMode):
+    referenceString = ""
 
     N = 10 if length < 10 else length
 
-    if locality_mode:
-        base_page = random.randint(0, N)
+    if localityMode:
+        basePage = random.randint(0, N)
 
         for _ in range(length):
             if random.random() < 0.8:
-                reference_string += str(base_page) + ','
+                referenceString += str(basePage) + ','
             else:
-                reference_string += str(random.randint(0, N)) + ','
+                referenceString += str(random.randint(0, N)) + ','
 
             # Change base page sometimes
             if random.random() < 0.20:
-                base_page = random.randint(0, N)
+                basePage = random.randint(0, N)
     else:
         for _ in range(length):
-            reference_string += str(random.randint(0, N)) + ','
+            referenceString += str(random.randint(0, N)) + ','
 
-    return reference_string[:-1]
+    return referenceString[:-1]
 
 
 def fifo(frames : int, referenceString : list[str], memoryView = False) -> int | FaultsMemoryView :
