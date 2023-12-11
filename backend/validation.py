@@ -46,3 +46,11 @@ async def validateRefString(refStr: str, encoded: bool):
         )
     
     return refList
+
+async def validateRange(minVal : int, maxVal : int) -> bool:
+    if minVal < maxVal:
+        return True
+    else: 
+        raise ValueError(
+             f"minFrames and maxFrames aren't a range. Received min value of {minVal} and {maxVal}."
+        ) 

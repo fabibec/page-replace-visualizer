@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from typing import Annotated
 
@@ -9,7 +9,7 @@ sys.path.append('./backend')
 from algorithms import refStringGen, fifo, lru, opt
 import constants as c
 from response_models import ReferenceString, Faults, FaultsRange, FaultsMemoryView
-from validation import validateRefString
+from validation import validateRefString, validateRange
 
 # Meta Data for documentation
 tags_metadata = [
@@ -53,7 +53,7 @@ app = FastAPI(
 This section handles the Frontend Endpoints
 '''
 app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
-templates = Jinja2Templates(directory="frontend")
+templates = Jinja2Templates(directory="frontend/templates")
 
 @app.get("/", response_class = HTMLResponse, include_in_schema= False)
 async def home(request: Request):
@@ -73,7 +73,7 @@ async def imprint(request: Request):
 
 @app.exception_handler(404)
 async def not_found_exception_handler(request: Request, exc: HTTPException):
-    return RedirectResponse('https://en.wikipedia.org/wiki/HTTP_404')
+    return templates.TemplateResponse("404.html", {"request": request})
 
 
 '''
@@ -82,7 +82,7 @@ This section handles the Backend Endpoints
 @app.get("/api/refString/", tags=["referenceString"], response_model=ReferenceString)
 async def generate_Reference_String(
         length: Annotated[int, Query(title="The length of the Reference String", \
-                                    ge=c.FRAMES_MIN_VALUE, le=c.FRAMES_MAX_VALUE)] = c.FRAMES_DEFAULT_VALUE,
+                                    ge=c.REF_STRING_MIN_VALUE, le=c.REF_STRING_MAX_VALUE)] = c.REF_STRING_DEFAULT_VALUE,
         locality: Annotated[bool, Query(title="Locality creates more realistic Reference String")] = True
     ):
 
@@ -114,18 +114,19 @@ async def Page_Faults_compare(
 
     # Building response model
     return Faults(
-        InputReferenceString=refStr if debug else None,
-        FIFO=fifo(frames, refStr) if FIFO else None,
+        InputReferenceString = ','.join(refStr) if debug else None,
+        FIFO = fifo(frames, refStr) if FIFO else None,
         #SC=sc(frames,refStr) if SC else None
-        LRU=lru(frames, refStr) if LRU else None,
-        OPT=opt(frames, refStr) if OPT else None 
+        LRU = lru(frames, refStr) if LRU else None,
+        OPT = opt(frames, refStr) if OPT else None 
     )
     
 
 @app.get("/api/faults/compare/range", tags=["compareFaultsRange"], response_model=FaultsRange, response_model_exclude_none=True)
 async def Page_Faults_compare_over_Range(
-        referenceString: str, 
-        maxFrames: Annotated[int, Query(title="Number of Frames", ge=c.FRAMES_MIN_VALUE, le=c.FRAMES_MAX_VALUE)] = c.FRAMES_DEFAULT_VALUE, 
+        referenceString: str,
+        minFrames: Annotated[int, Query(title="Maximum number of Frames", ge=c.FRAMES_MIN_VALUE, lt=c.FRAMES_MAX_VALUE)] = c.FRAMES_MIN_VALUE, 
+        maxFrames: Annotated[int, Query(title="Maximum number of Frames", gt=c.FRAMES_MIN_VALUE,le=c.FRAMES_MAX_VALUE)] = c.FRAMES_DEFAULT_VALUE, 
         FIFO: Annotated[bool, Query(title="First-in-First-out Algorithm")] = True, 
         SC: Annotated[bool, Query(title="Second-Chance Algorithm")] = True, 
         LRU: Annotated[bool, Query(title="Least Recent Use Algorithm")] = False, 
@@ -137,21 +138,22 @@ async def Page_Faults_compare_over_Range(
     # Validating and decoding reference string
     try:
         refStr = await validateRefString(referenceString, encoded=base64)
+        await validateRange(minFrames, maxFrames)
     except ValueError as ex:
         raise HTTPException(status_code=422, detail=str(ex))
 
     # Building response model
     return FaultsRange(
-        InputReferenceString=refStr if debug else None,
-        FIFO = [result for result in (fifo(f, refStr) for f in range(c.FRAMES_MIN_VALUE, maxFrames + 1))] \
+        InputReferenceString= ','.join(refStr) if debug else None,
+        FIFO = [result for result in (fifo(f, refStr) for f in range(minFrames, maxFrames + 1))] \
             # This uses the input flag 
             if FIFO else None,
-        # SC = [result for result in (sc(f, refStr) for f in range(c.FRAMES_MIN_VALUE, maxFrames + 1))] \
+        # SC = [result for result in (sc(f, refStr) for f in range(minFrames, maxFrames + 1))] \
         #    if SC else None,
-        LRU = [result for result in (lru(f, refStr) for f in range(c.FRAMES_MIN_VALUE, maxFrames + 1))] \
+        LRU = [result for result in (lru(f, refStr) for f in range(minFrames, maxFrames + 1))] \
             # This uses the input flag 
             if LRU else None,
-        OPT = [result for result in (opt(f, refStr) for f in range(c.FRAMES_MIN_VALUE, maxFrames + 1))] \
+        OPT = [result for result in (opt(f, refStr) for f in range(minFrames, maxFrames + 1))] \
             # This uses the input flag 
             if OPT else None,        
     )
