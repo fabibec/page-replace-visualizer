@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('frontend', path='/static/favicon/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('frontend', path='/static/favicon/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('frontend', path='static/favicon/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('frontend', path='static/favicon/site.webmanifest') }}">
+    <link rel="mask-icon" href="{{ url_for('frontend', path='static/favicon/safari-pinned-tab.svg') }}" color="#5bbad5">
+    <link rel="shortcut icon" href="{{ url_for('frontend', path='static/favicon/favicon.ico') }}">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-config" content="{{ url_for('frontend', path='static/favicon/browserconfig.xml') }}">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" href="{{ url_for('frontend', path='/spectre-css/dist/spectre.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('frontend', path='/spectre-css/dist/spectre-exp.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('frontend', path='/spectre-css/dist/spectre-icons.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('frontend', path='/static/styles.css') }}" />
+    <title>{% block title %}{% endblock %}</title>
+  </head>
+
+  <body>
+    <header class="navbar mb-8">
+      <section class="navbar-section">
+        <a href="{{ url_for('algorithms') }}" class="btn btn-link">The Algorithms</a>
+        <a href="{{ url_for('visualize') }}" class="btn btn-link">Visualize</a>
+      </section>
+      <section class="navbar-center">
+        <!-- centered logo or brand -->
+        <a href="{{ url_for('home') }}" class="navbar-brand hero-lg"><b>Page replacement visualizer</b></a>
+      </section>
+      <section class="navbar-section">
+        <a href="{{ url_for('imprint') }}" class="btn btn-link">Imprint</a>
+        <a href="https://github.com/fabibec/page-replace-visualizer" class="btn btn-link">GitHub</a>
+      </section>
+    </header>
+    {% block content %} {% endblock %}
+  </body>
+</html>
+
+
+
+
+
+

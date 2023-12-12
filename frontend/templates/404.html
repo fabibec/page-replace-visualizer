@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}404 - Page not found{% endblock %}
+{% block content %}
+<main class="container">
+  <div class="columns">
+    <div class="column col-4 col-md-8 col-mx-auto">
+      <div class="empty">
+        <div class="empty-icon">
+          <i class="icon icon-2x icon-cross"></i>
+        </div>
+        <p class="empty-title h1">404</p>
+        <p class="empty-subtitle h4">We sadly couldn't find the page you were looking for..</p>
+        <div class="empty-action">
+          <button class="btn btn-primary" onclick="window.location.href='{{ url_for('home') }}';">Back to the Homepage</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+    
+</main>
+{% endblock%}

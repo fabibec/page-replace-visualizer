@@ -1,0 +1,11 @@
+version: '3.9'
+
+services:
+  page-replacement_visualizer:
+    image: ghcr.io/fabibec/page-replace-visualizer-local:latest
+    container_name: prv
+    ports:
+      # First port resembles the port on your machine
+      # You can change it to your liking 
+      # The Website will be accessible at localhost:<your_port>
+      - "8080:8080"
