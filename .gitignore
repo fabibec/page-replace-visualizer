@@ -2,7 +2,7 @@
 venv
 ./__pycache__/
 __pycache__
-./.vscode/
+.vscode/
 backend/.vscode/
 backend/__pycache__/
 backend/venv

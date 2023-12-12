@@ -1,8 +1,7 @@
-from fastapi import FastAPI, HTTPException, Query, Request
+from fastapi import FastAPI, Request, HTTPException, Query, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from fastapi.middleware.cors import CORSMiddleware
 from typing import Annotated
 
 import sys
@@ -32,7 +31,6 @@ tags_metadata = [
     },
 ]
 
-
 # API Specification
 app = FastAPI(
     title="Page Fault API",
@@ -48,16 +46,6 @@ app = FastAPI(
     openapi_tags=tags_metadata
 )
 
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["https://os.remberger.dev/", "http://localhost:8000/visualize"],
-    allow_credentials=True,
-    allow_methods=["GET"],
-    allow_headers=["*"],
-)
-
-
 '''
 This section handles the Frontend Endpoints
 '''
@@ -66,23 +54,23 @@ templates = Jinja2Templates(directory="frontend/templates")
 
 @app.get("/", response_class = HTMLResponse, include_in_schema= False)
 async def home(request: Request):
-    return templates.TemplateResponse("home.html", {"request": request})
+    return templates.TemplateResponse("home.html", {"request": request, "base_url": request.base_url})
 
 @app.get("/visualize", response_class = HTMLResponse, include_in_schema= False)
 async def visualize(request: Request):
-    return templates.TemplateResponse("visualize.html", {"request": request})
+    return templates.TemplateResponse("visualize.html", {"request": request, "base_url": request.base_url})
 
 @app.get("/algorithms", response_class = HTMLResponse, include_in_schema= False)
 async def algorithms(request: Request):
-    return templates.TemplateResponse("algorithms.html", {"request": request})
+    return templates.TemplateResponse("algorithms.html", {"request": request, "base_url": request.base_url})
 
 @app.get("/imprint", response_class = HTMLResponse, include_in_schema= False)
 async def imprint(request: Request):
-    return templates.TemplateResponse("imprint.html", {"request": request})
+    return templates.TemplateResponse("imprint.html", {"request": request, "base_url": request.base_url})
 
 @app.exception_handler(404)
 async def not_found_exception_handler(request: Request, exc: HTTPException):
-    return templates.TemplateResponse("404.html", {"request": request})
+    return templates.TemplateResponse("404.html", {"request": request, "base_url": request.base_url})
 
 
 '''
