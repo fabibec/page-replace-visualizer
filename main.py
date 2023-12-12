@@ -54,23 +54,23 @@ templates = Jinja2Templates(directory="frontend/templates")
 
 @app.get("/", response_class = HTMLResponse, include_in_schema= False)
 async def home(request: Request):
-    return templates.TemplateResponse("home.html", {"request": request, "base_url": request.base_url})
+    return templates.TemplateResponse("home.html", {"request": request})
 
 @app.get("/visualize", response_class = HTMLResponse, include_in_schema= False)
 async def visualize(request: Request):
-    return templates.TemplateResponse("visualize.html", {"request": request, "base_url": request.base_url})
+    return templates.TemplateResponse("visualize.html", {"request": request})
 
 @app.get("/algorithms", response_class = HTMLResponse, include_in_schema= False)
 async def algorithms(request: Request):
-    return templates.TemplateResponse("algorithms.html", {"request": request, "base_url": request.base_url})
+    return templates.TemplateResponse("algorithms.html", {"request": request})
 
 @app.get("/imprint", response_class = HTMLResponse, include_in_schema= False)
 async def imprint(request: Request):
-    return templates.TemplateResponse("imprint.html", {"request": request, "base_url": request.base_url})
+    return templates.TemplateResponse("imprint.html", {"request": request})
 
 @app.exception_handler(404)
 async def not_found_exception_handler(request: Request, exc: HTTPException):
-    return templates.TemplateResponse("404.html", {"request": request, "base_url": request.base_url})
+    return templates.TemplateResponse("404.html", {"request": request})
 
 
 '''
