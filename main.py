@@ -1,8 +1,7 @@
-from fastapi import FastAPI, HTTPException, Query, Request
+from fastapi import FastAPI, Request, HTTPException, Query, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from fastapi.middleware.cors import CORSMiddleware
 from typing import Annotated
 
 import sys
@@ -32,7 +31,6 @@ tags_metadata = [
     },
 ]
 
-
 # API Specification
 app = FastAPI(
     title="Page Fault API",
@@ -47,16 +45,6 @@ app = FastAPI(
     openapi_url="/openapi.json",
     openapi_tags=tags_metadata
 )
-
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["https://os.remberger.dev/", "http://localhost:8000/visualize"],
-    allow_credentials=True,
-    allow_methods=["GET"],
-    allow_headers=["*"],
-)
-
 
 '''
 This section handles the Frontend Endpoints

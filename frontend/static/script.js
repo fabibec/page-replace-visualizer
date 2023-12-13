@@ -1,8 +1,4 @@
-
-// local testing
-// const api = 'http://localhost:8000/api/';
-// production
-const api = 'https://os.remberger.dev/api/';
+const api = document.getElementById('url-base').getAttribute('data-name')  + 'api/';
 
 document.getElementById('generateBtn').addEventListener('click', function (event) {
 
