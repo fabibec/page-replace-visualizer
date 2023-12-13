@@ -25,3 +25,25 @@ document.getElementById('generateBtn').addEventListener('click', function (event
 );
 
 
+document.getElementById('faultsCompareBtn').addEventListener('click', function (event) {
+
+    event.preventDefault();
+    const all = document.getElementById('faultsAllSlct').checked;
+    const fifo = document.getElementById('faultsFifoSlct').checked;
+    const opt = document.getElementById('faultsOptSlct').checked;
+    const sc = document.getElementById('faultsScSlct').checked;
+    const lru = document.getElementById('faultsLruSlct').checked;
+    const refString = btoa(document.getElementById('refStringInpt').value);
+    const frames = document.getElementById('frameInpt').value;
+    const query = 'referenceString=' + refString + '&frames=' + frames + '&fifo=' + (fifo||all) + '&opt=' + (opt||all) + '&sc=' + (sc||all) + '&lru=' + (lru||all) + '&base64=' + 'true';
+    console.log(query);
+    fetch(api + 'faults/compare?' + query)
+        .then(response => response.json())
+        .then(data => {
+
+            console.log(data);
+            //chart.js logic
+
+                    })
+        .catch(err => console.log(err));
+});
