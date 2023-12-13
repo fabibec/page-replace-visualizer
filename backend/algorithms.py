@@ -1,6 +1,6 @@
 import random
 from collections import deque
-from response_models import FaultsMemoryFrame, FaultsMemoryView, PRAlgorithm
+from response_models import FaultsMemoryFrame, FaultsMemoryView, PRAlgorithm, FaultsMemoryFrameSC
 
 
 def refStringGen(length, localityMode):
@@ -141,3 +141,51 @@ def opt(frames : int, referenceString : list[str], memoryView = False) -> int | 
     
     return pageFaults if not memoryView \
         else FaultsMemoryView(PageReplaceAlgorithm = PRAlgorithm.OPT, MemoryTable = memTable)
+
+def sc(frames : int, referenceString : list[str], memoryView = False) -> int | FaultsMemoryFrameSC:
+    frameList = [None] * frames
+    refBitList = [False] * frames
+    ptr = 0
+    pageFaults = 0
+
+    if memoryView:
+        # create list to store memory table
+        memTable = []
+
+    for page in referenceString:
+        
+        if page not in frameList:
+
+            if None in frameList:
+                frameList[ptr] = page
+                refBitList[ptr] = True
+                ptr = (ptr+1) % frames
+            else:
+                while True: #max frames + 1 runs
+                    if refBitList[ptr] == False:
+                        frameList[ptr] = page
+                        refBitList[ptr] = True
+                        ptr = (ptr + 1) % frames
+                        break
+                    else:
+                        refBitList[ptr] = False
+                        ptr = (ptr + 1) % frames
+
+            pageFaults += 1
+                
+        else:
+            refBitList[frameList.index(page)] = True
+
+        """if memoryView:
+            f = FaultsMemoryFrameSC(
+                Index = len(memTable),
+                NeededPage = page,
+                MemoryView = frameList,
+                PageFault = False,
+                CursorPosition = ptr,
+                ModifiedBit = refBitList[ptr]
+            )
+            memTable.append(f)"""
+
+    return pageFaults if not memoryView \
+        else FaultsMemoryFrameSC(PageReplaceAlgorithm = PRAlgorithm.SC, MemoryTable = memTable)
