@@ -29,7 +29,7 @@ def refStringGen(length, localityMode):
 
 def fifo(frames : int, referenceString : list[str], memoryView = False) -> int | FaultsMemoryView :
     frameList = deque(([None] * frames), maxlen = frames)
-    pageFaults = 0 
+    pageFaults = 0
 
     if memoryView:
         # create list to store memory table
@@ -41,7 +41,7 @@ def fifo(frames : int, referenceString : list[str], memoryView = False) -> int |
             frameList.appendleft(i)
             pageFaults += 1
             isPageFault = True
-        
+
         if memoryView:
             f = FaultsMemoryFrame(
                 Index = len(memTable),
@@ -126,7 +126,7 @@ def opt(frames : int, referenceString : list[str], memoryView = False) -> int | 
                             index = j
                 # Replace victim page with new page
                 frameList[index] = page
-            
+
             pageFaults += 1
             isPageFault = True
 
@@ -138,7 +138,7 @@ def opt(frames : int, referenceString : list[str], memoryView = False) -> int | 
                 PageFault = isPageFault
             )
             memTable.append(f)
-    
+
     return pageFaults if not memoryView \
         else FaultsMemoryView(PageReplaceAlgorithm = PRAlgorithm.OPT, MemoryTable = memTable)
 
@@ -154,14 +154,14 @@ def sc(frames : int, referenceString : list[str], memoryView = False) -> int | F
 
     for page in referenceString:
         isPageFault = False
-        
+
         if page not in frameList:
 
             if None in frameList:
                 frameList[ptr] = page
                 refBitList[ptr] = True
                 ptr = (ptr + 1) % frames
-            
+
             else:
                 while True: #max frames + 1 runs
                     if refBitList[ptr] == False:
@@ -175,7 +175,7 @@ def sc(frames : int, referenceString : list[str], memoryView = False) -> int | F
 
             pageFaults += 1
             isPageFault = True
-                
+
         else:
             refBitList[frameList.index(page)] = True
 
@@ -206,15 +206,15 @@ def sc_test():
     refStr2Lst = refStr2Num.split(' ')
     refStr2Exp = 11
 
-    # I don't know if this is correct
     refStr3Frames = 3
     refStr3Num = "2 5 10 1 2 2 6 9 1 2 10 2 6 1 2 1 6 9 5 1"
     refStr3Lst = refStr3Num.split(' ')
-    refStr3Exp = 14
+    refStr3Exp = 16
 
     refStr1Ret = sc(refStr1Frames, refStr1Lst)
     refStr2Ret = sc(refStr2Frames, refStr2Lst)
     refStr3Ret = sc(refStr3Frames, refStr3Lst)
+
 
     print(f"Test1: Expected {refStr1Exp}, Result {refStr1Ret} -> Passed {refStr1Exp == refStr1Ret}")
     print(f"Test2: Expected {refStr2Exp}, Result {refStr2Ret} -> Passed {refStr2Exp == refStr2Ret}")
