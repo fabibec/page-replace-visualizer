@@ -91,20 +91,32 @@ function createMemoryTableObj(htmlTableObj, memoryTableObj, algorithm) {
   for (const [key, v] of Object.entries(memoryTableObj[0].MemoryView)) {
     tr = document.createElement('tr');
     // Header
-    tr.appendChild(createTableHeader('Frame ' + key))
+    tr.appendChild(createTableHeader('Frame ' + (Number(key) + 1)));
 
     memoryTableObj.forEach(item => {
-      if (algorithm !== 'SC') {
         td = document.createElement('td');
         if (item.MemoryView[key] == null) {
           icon = document.createElement('i');
           icon.classList.add('icon', 'icon-minus');
           td.appendChild(icon);
-        } else {
-          td.appendChild(document.createTextNode(item.MemoryView[key]));
+        } else { 
+          if (algorithm === 'SC') {
+            // Add cursor icon
+            if (item.CursorPosition === Number(key)) {
+              cursor = document.createElement('icon');
+              cursor.classList.add('icon', 'icon-forward', 'cursor');
+              td.appendChild(cursor);
+            }
+            td.appendChild(document.createTextNode(item.MemoryView[key]));
+            // Add modified Bit for SC
+            mdBit = document.createElement('sub');
+            mdBit.appendChild(document.createTextNode('(' + item.ModifiedBits[key] +')'));
+            td.appendChild(mdBit); 
+          } else {
+            td.appendChild(document.createTextNode(item.MemoryView[key]));
+          }
         }
         tr.appendChild(td);
-      }
     });
     htmlTableObj.appendChild(tr);
   }
@@ -163,6 +175,9 @@ memoryViewForm.addEventListener('submit', async event => {
             case ('MemoryView'):
               createMemoryTableObj(table, resData.MemoryTable, resData.PageReplaceAlgorithm);
               break;
+            case ('ModifiedBits'):
+            case ('CursorPosition'):
+                break;
             default:
               tr = document.createElement('tr');
               tr.appendChild(createTableHeader(key));
@@ -172,6 +187,8 @@ memoryViewForm.addEventListener('submit', async event => {
           resData.MemoryTable.forEach(item => {
               switch(key) {
                 case ('MemoryView'):
+                case ('ModifiedBits'):
+                case ('CursorPosition'):
                   break;
                 case ('PageFault'):
                   td = document.createElement('td');
@@ -194,7 +211,7 @@ memoryViewForm.addEventListener('submit', async event => {
 
           table.appendChild(tr)
         }
-
+        localStorage.setItem('memTable', table);
         tableInsert = document.getElementById('memoryTable');
         console.log(table);
         tableInsert.replaceChildren(table);
