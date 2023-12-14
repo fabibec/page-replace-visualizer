@@ -50,11 +50,9 @@ updateSliderValue('faultsFrameSize', 'FrameSizeValue');
 updateSliderValue('memoryFrameSize', 'memoryFrameSizeValue');
 
 
-// Select all checkboxes -not working as of now
 function toggleAllCheckboxes(source, destName) {
-    checkboxes = document.getElementsByName(destName);
-    for(var checkbox in checkboxes)
-      checkbox.checked = source.checked;
+    for (i = 0; i < document.getElementsByName(destName).length; i++)
+        document.getElementsByName(destName)[i].checked = source.checked;
 }
 
 // RefString form validation
