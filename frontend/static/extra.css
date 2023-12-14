@@ -1,0 +1,19 @@
+.col-fixed {
+    position: fixed !important;
+}
+
+.col-scroll {
+    overflow-y: auto;
+    margin-left: 33.3%;
+    height: 200vh;
+}
+
+.switch-locality {
+    padding: 2rem 0.4rem 0rem 1.2rem;
+}
+
+.form-select {
+    margin-top: 0.5rem;
+}
+
+  
