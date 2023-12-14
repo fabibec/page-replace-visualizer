@@ -44,7 +44,7 @@ class FaultsMemoryFrame(BaseModel):
 
 class FaultsMemoryFrameSC(FaultsMemoryFrame):
     CursorPosition: int = Field(description = "Position of the SC cursor after performing the current operation")
-    ModifiedBit: int = Field(description = "Value of the modified bit")
+    ModifiedBits: list[int] = Field(description = "Values of the modified bit")
 
 
 class FaultsMemoryView(BaseModel):
