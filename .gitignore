@@ -6,3 +6,4 @@ __pycache__
 backend/.vscode/
 backend/__pycache__/
 backend/venv
+__pycache__/

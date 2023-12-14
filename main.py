@@ -6,9 +6,9 @@ from typing import Annotated
 
 import sys
 sys.path.append('./backend')
-from algorithms import refStringGen, fifo, lru, opt
+from algorithms import refStringGen, fifo, lru, opt, sc
 import constants as c
-from response_models import ReferenceString, Faults, FaultsRange, FaultsMemoryView, FaultsRangeItem
+from response_models import ReferenceString, Faults, FaultsRange, FaultsMemoryView, FaultsRangeItem, FaultsMemoryFrameSC
 from validation import validateRefString, validateRange
 
 # Meta Data for documentation
@@ -113,7 +113,7 @@ async def Page_Faults_compare(
     return Faults(
         InputReferenceString = ','.join(refStr) if debug else None,
         FIFO = fifo(frames, refStr) if FIFO else None,
-        #SC=sc(frames,refStr) if SC else None
+        SC= sc(frames,refStr) if SC else None,
         LRU = lru(frames, refStr) if LRU else None,
         OPT = opt(frames, refStr) if OPT else None
     )
@@ -146,8 +146,10 @@ async def Page_Faults_compare_over_Range(
                 for f, result in enumerate((fifo(f, refStr) for f in range(minFrames, maxFrames + 1)), start = minFrames)] \
                 # This uses the input flag
                 if FIFO else None,
-        # SC = [result for result in (sc(f, refStr) for f in range(minFrames, maxFrames + 1))] \
-        #    if SC else None,
+        SC = [FaultsRangeItem(Frames = f, Faults = result) \
+               for f, result in enumerate((sc(f, refStr) for f in range(minFrames, maxFrames + 1)), start = minFrames)] \
+                # This uses the input flag
+               if SC else None,
         LRU = [FaultsRangeItem(Frames = f, Faults = result) \
                for f, result in enumerate((lru(f, refStr) for f in range(minFrames, maxFrames + 1)), start = minFrames)] \
                 # This uses the input flag
@@ -180,7 +182,7 @@ async def Page_Faults_get_memory_view(
         return fifo(frames, refStr, True)
 
     if SC:
-        raise NotImplementedError
+        return sc(frames, refStr, True)
 
     if LRU:
         return lru(frames, refStr, True)
