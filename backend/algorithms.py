@@ -142,7 +142,7 @@ def opt(frames : int, referenceString : list[str], memoryView = False) -> int | 
     return pageFaults if not memoryView \
         else FaultsMemoryView(PageReplaceAlgorithm = PRAlgorithm.OPT, MemoryTable = memTable)
 
-def sc(frames : int, referenceString : list[str], memoryView = False) -> int | FaultsMemoryFrameSC:
+def sc(frames : int, referenceString : list[str], memoryView = False) -> int | FaultsMemoryView:
     frameList = [None] * frames
     refBitList = [False] * frames
     ptr = 0
@@ -153,13 +153,15 @@ def sc(frames : int, referenceString : list[str], memoryView = False) -> int | F
         memTable = []
 
     for page in referenceString:
+        isPageFault = False
         
         if page not in frameList:
 
             if None in frameList:
                 frameList[ptr] = page
                 refBitList[ptr] = True
-                ptr = (ptr+1) % frames
+                ptr = (ptr + 1) % frames
+            
             else:
                 while True: #max frames + 1 runs
                     if refBitList[ptr] == False:
@@ -172,20 +174,53 @@ def sc(frames : int, referenceString : list[str], memoryView = False) -> int | F
                         ptr = (ptr + 1) % frames
 
             pageFaults += 1
+            isPageFault = True
                 
         else:
             refBitList[frameList.index(page)] = True
 
-        """if memoryView:
+        if memoryView:
             f = FaultsMemoryFrameSC(
                 Index = len(memTable),
                 NeededPage = page,
                 MemoryView = frameList,
-                PageFault = False,
+                PageFault = isPageFault,
                 CursorPosition = ptr,
-                ModifiedBit = refBitList[ptr]
-            )
-            memTable.append(f)"""
+                ModifiedBit = refBitList[ptr])
+            memTable.append(f)
+
+        print(f"Frames {frameList} | Modified Bit {refBitList} | Page Faults {pageFaults} | isPageFault {isPageFault} | Page {page} | PointerPos {ptr}")
 
     return pageFaults if not memoryView \
-        else FaultsMemoryFrameSC(PageReplaceAlgorithm = PRAlgorithm.SC, MemoryTable = memTable)
+        else FaultsMemoryView(PageReplaceAlgorithm = PRAlgorithm.SC, MemoryTable = memTable)
+
+
+def sc_test():
+    refStr1Num = [0, 4, 1, 4, 2, 4, 3, 4, 2, 4, 0, 4, 1, 4, 2, 4, 3, 4]
+    refStr1Frames = 3
+    refStr1Lst = [str(i) for i in refStr1Num]
+    refStr1Exp = 9
+
+    refStr2Frames = 4
+    refStr2Num = "2 5 10 1 2 2 6 9 1 2 10 2 6 1 2 1 6 9 5 1"
+    refStr2Lst = refStr2Num.split(' ')
+    refStr2Exp = 11
+
+    # I don't know if this is correct
+    refStr3Frames = 3
+    refStr3Num = "2 5 10 1 2 2 6 9 1 2 10 2 6 1 2 1 6 9 5 1"
+    refStr3Lst = refStr3Num.split(' ')
+    refStr3Exp = 14
+
+    refStr1Ret = sc(refStr1Frames, refStr1Lst)
+    refStr2Ret = sc(refStr2Frames, refStr2Lst)
+    refStr3Ret = sc(refStr3Frames, refStr3Lst)
+
+    print(f"Test1: Expected {refStr1Exp}, Result {refStr1Ret} -> Passed {refStr1Exp == refStr1Ret}")
+    print(f"Test2: Expected {refStr2Exp}, Result {refStr2Ret} -> Passed {refStr2Exp == refStr2Ret}")
+    print(f"Test3: Expected {refStr3Exp}, Result {refStr3Ret} -> Passed {refStr3Exp == refStr3Ret}")
+
+
+if __name__ == '__main__':
+    sc_test()
+

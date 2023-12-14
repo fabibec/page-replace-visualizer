@@ -49,6 +49,6 @@ class FaultsMemoryFrameSC(FaultsMemoryFrame):
    
 class FaultsMemoryView(BaseModel):
     PageReplaceAlgorithm: PRAlgorithm = Field(description = "Name of the page replacement algorithm used")
-    MemoryTable: list[FaultsMemoryFrame] = Field(description = "List of the memory frames")
+    MemoryTable: list[FaultsMemoryFrame | FaultsMemoryFrameSC] = Field(description = "List of the memory frames")
 
 
