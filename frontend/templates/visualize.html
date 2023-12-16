@@ -35,13 +35,15 @@
               </label>
             </div>
             <div class="form-group">
+              <!--Prevent Enter submit-->
+              <input type="number" style="display: none;"/>
               <input
                 class="form-input"
                 type="text"
                 id="refStrInpt"
                 placeholder="Type in or generate reference string"
-                pattern="^[-\w\s]+(?:,[-\w\s]+)*$"
                 onchange="flagRefStrInptField();"
+                onsubmit="return false;"
               />
               <p class="form-input-hint" id="refStrInptMsg" style="display: none;">Please generate or insert a reference string!</p>
             </div>

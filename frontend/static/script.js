@@ -41,7 +41,6 @@ const optColor = {
     borderColor: chartBorderColors[3]
 };
 
-//
 function flagRefStrInptField(){
   let el = refStrInpt;
   let msg = document.getElementById('refStrInptMsg');
@@ -56,20 +55,10 @@ function flagRefStrInptField(){
   }
 }
 
-
 // Updating RefString Slider
 function updateSliderValue(sliderID, valueID){
   let length = document.getElementById(sliderID).valueAsNumber;
   document.getElementById(valueID).innerHTML = '<b>' + length + '</b>';
-}
-
-
-
-// Select all checkboxes -not working as of now
-function toggleAllCheckboxes(source, destName) {
-    checkboxes = document.getElementsByName(destName);
-    for(var checkbox in checkboxes)
-      checkbox.checked = source.checked;
 }
 
 // RefString form validation
@@ -364,3 +353,5 @@ let faultComparisonChart = new Chart(faultComparisonCanvas, {
     updateSliderValue('memoryFrameSize', 'memoryFrameSizeValue');
     flagRefStrInptField();
   }
+
+  init();
