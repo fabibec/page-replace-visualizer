@@ -40,7 +40,10 @@
                 type="text"
                 id="refStrInpt"
                 placeholder="Type in or generate reference string"
+                pattern="^[-\w\s]+(?:,[-\w\s]+)*$"
+                onchange="flagRefStrInptField();"
               />
+              <p class="form-input-hint" id="refStrInptMsg" style="display: none;">Please generate or insert a reference string!</p>
             </div>
             <div class="form-group">
               <!--Add class loading when calling API-->
@@ -145,7 +148,7 @@
               </select>
             </div>  
             <div class="form-group">
-              <label class="form-label form-inline float-left" for="memoryFrameSize">Length:</label>
+              <label class="form-label form-inline float-left" for="memoryFrameSize">Frames:</label>
               <label class="form-label form-inline float-right" id="memoryFrameSizeValue" for="memoryFrameSize">6</label>
               <input class="slider tooltip" type="range" min="2" max="12" value="6" oninput="this.setAttribute('value', this.value);updateSliderValue('memoryFrameSize', 'memoryFrameSizeValue');" id="memoryFrameSize">
             </div> 

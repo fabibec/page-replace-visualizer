@@ -16,6 +16,10 @@
     margin-top: 0.5rem;
 }
 
+.table {
+    border-collapse: unset;
+}
+
 .table td, .table th {
 	padding: .4rem .8rem;
 	border-right: .05rem solid #dadee4;
@@ -42,7 +46,6 @@ th {
 
 .memoryTable {
     overflow-x: auto;
-    border-collapse: separate;
     border-spacing: 0;
 }
 
@@ -50,5 +53,5 @@ tr > th {
     position: sticky;
     left: 0;
     background: #fff;
-    z-index: 100;
+    z-index: 2;
 }

@@ -1,4 +1,5 @@
 const api = document.getElementById('url-base').getAttribute('data-name')  + 'api/';
+const refStrInpt = document.getElementById('refStrInpt');
 const refStringForm = document.getElementById('refStringForm');
 const faultForm = document.getElementById('faultForm');
 const faultRangeForm = document.getElementById('faultRangeForm');
@@ -40,14 +41,28 @@ const optColor = {
     borderColor: chartBorderColors[3]
 };
 
+//
+function flagRefStrInptField(){
+  let el = refStrInpt;
+  let msg = document.getElementById('refStrInptMsg');
+  if (el.value) {
+    el.parentElement.classList.add('has-success');
+    el.parentElement.classList.remove('has-error');
+    msg.style.display = 'none';
+  } else {
+    el.parentElement.classList.remove('has-success');
+    el.parentElement.classList.add('has-error');
+    msg.style.display = 'block';
+  }
+}
+
+
 // Updating RefString Slider
 function updateSliderValue(sliderID, valueID){
   let length = document.getElementById(sliderID).valueAsNumber;
   document.getElementById(valueID).innerHTML = '<b>' + length + '</b>';
 }
-updateSliderValue('refStrSize', 'refStrSizeValue');
-updateSliderValue('faultsFrameSize', 'FrameSizeValue');
-updateSliderValue('memoryFrameSize', 'memoryFrameSizeValue');
+
 
 
 // Select all checkboxes -not working as of now
@@ -77,7 +92,7 @@ refStringForm.addEventListener('submit', async event => {
     }
 
     button.classList.toggle('loading');
-
+    flagRefStrInptField();
 });
 
 function createTableHeader(key) {
@@ -92,31 +107,35 @@ function createMemoryTableObj(htmlTableObj, memoryTableObj, algorithm) {
     tr = document.createElement('tr');
     // Header
     tr.appendChild(createTableHeader('Frame ' + (Number(key) + 1)));
-
+    // Data
     memoryTableObj.forEach(item => {
-        td = document.createElement('td');
-        if (item.MemoryView[key] == null) {
-          icon = document.createElement('i');
-          icon.classList.add('icon', 'icon-minus');
-          td.appendChild(icon);
-        } else { 
-          if (algorithm === 'SC') {
-            // Add cursor icon
-            if (item.CursorPosition === Number(key)) {
-              cursor = document.createElement('icon');
-              cursor.classList.add('icon', 'icon-forward', 'cursor');
-              td.appendChild(cursor);
-            }
-            td.appendChild(document.createTextNode(item.MemoryView[key]));
-            // Add modified Bit for SC
-            mdBit = document.createElement('sub');
-            mdBit.appendChild(document.createTextNode('(' + item.ModifiedBits[key] +')'));
-            td.appendChild(mdBit); 
-          } else {
-            td.appendChild(document.createTextNode(item.MemoryView[key]));
-          }
+      td = document.createElement('td');
+      if (algorithm === 'SC') {
+        // Add cursor icon
+        if (item.CursorPosition === Number(key)) {
+          cursor = document.createElement('icon');
+          console.log('Key=' + key + ' | index=' + item.CursorPosition)
+          cursor.classList.add('icon', 'icon-forward', 'cursor');
+          td.appendChild(cursor);
         }
-        tr.appendChild(td);
+        // Null icon replacement
+        if(item.MemoryView[key] == null) {
+          td.appendChild(document.createTextNode("\u00b7"));
+        } else {
+          td.appendChild(document.createTextNode(item.MemoryView[key]));
+          // Add modified Bit for SC
+          mdBit = document.createElement('sub');
+          mdBit.appendChild(document.createTextNode('(' + item.ModifiedBits[key] +')'));
+          td.appendChild(mdBit);
+        } 
+      } else {
+        if(item.MemoryView[key] == null) {
+          td.appendChild(document.createTextNode("\u00b7"));
+        } else {
+          td.appendChild(document.createTextNode(item.MemoryView[key]));
+        }
+      }
+      tr.appendChild(td);
     });
     htmlTableObj.appendChild(tr);
   }
@@ -213,7 +232,7 @@ memoryViewForm.addEventListener('submit', async event => {
         }
         localStorage.setItem('memTable', table);
         tableInsert = document.getElementById('memoryTable');
-        console.log(table);
+        console.log(resData);
         tableInsert.replaceChildren(table);
     } catch (err) {
         console.log(err.message);
@@ -317,3 +336,10 @@ let faultComparisonChart = new Chart(faultComparisonCanvas, {
       }
     }
   });
+
+  function init(){
+    updateSliderValue('refStrSize', 'refStrSizeValue');
+    updateSliderValue('faultsFrameSize', 'FrameSizeValue');
+    updateSliderValue('memoryFrameSize', 'memoryFrameSizeValue');
+    flagRefStrInptField();
+  }
