@@ -331,9 +331,30 @@ let faultComparisonChart = new Chart(faultComparisonCanvas, {
     options: {
       scales: {
         y: {
-          beginAtZero: true
-        }
-      }
+          ticks: {
+            color: "#3b4351",
+            beginAtZero: true,
+            stepSize: 1
+          },
+          grid: {
+            drawTicks: false,
+          },
+          border: {
+            dash: [5, 10],
+          },
+        },
+        x: {
+          ticks: {
+            color: "#3b4351",
+          },
+          grid: {
+            display: false,
+          },
+          border: {
+            display: false,
+          },
+        },
+      },
     }
   });
 
