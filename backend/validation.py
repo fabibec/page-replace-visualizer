@@ -33,7 +33,7 @@ async def validateRefString(refStr: str, encoded: bool):
     
     # String processing
     refList = decodedData.split(",")
-    refList = [d for d in refList if d.strip()]
+    refList = [d.replace('\t','').strip() for d in refList if d.strip()]
     
     # Check for correct values
     if len(refList) > c.REF_STRING_MAX_VALUE:
