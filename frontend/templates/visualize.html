@@ -100,25 +100,25 @@
                   <input type="checkbox"><i class="form-icon" onClick="toggleAllCheckboxes(this, 'faults')"></i>Select All
                 </label>
                 <label class="form-checkbox form-inline">
-                  <input type="checkbox" name="faults" checked=""><i class="form-icon"></i>FIFO
+                  <input type="checkbox" id="faultRangeFifoSlct" name="faults" checked=""><i class="form-icon"></i>FIFO
                 </label>
                 <label class="form-checkbox form-inline">
-                  <input type="checkbox" name="faults" checked=""><i class="form-icon"></i>SC
+                  <input type="checkbox" id="faultRangeScSlct" name="faults" checked=""><i class="form-icon"></i>SC
                 </label>
                 <label class="form-checkbox form-inline">
-                  <input type="checkbox" name="faults"><i class="form-icon"></i>LRU
+                  <input type="checkbox" id="faultRangeLruSlct" name="faults"><i class="form-icon"></i>LRU
                 </label>
                 <label class="form-checkbox form-inline">
-                  <input type="checkbox" name="faults"><i class="form-icon"></i>OPT
+                  <input type="checkbox" id="faultRangeOptSlct" name="faults"><i class="form-icon"></i>OPT
                 </label>
-                <button class="btn form-inline float-right" id="faultsRangeCompareBtn">Compare</button>
+                <button class="btn form-inline float-right" id="faultRangeCompareBtn">Compare</button>
               </div>
               <div class="form-group">
                 <div class="min-max-slider" data-legendnum="2">
-                  <label for="min">Minimum price</label>
-                  <input id="min" class="min" name="min" type="range" step="1" min="0" max="3000" />
-                  <label for="max">Maximum price</label>
-                  <input id="max" class="max" name="max" type="range" step="1" min="0" max="3000" />
+                  <label for="faultRangeMin">Minimum price</label>
+                  <input id="faultRangeMin" class="min" name="min" type="range" step="1" min="0" max="3000" />
+                  <label for="faultRangeMax">Maximum price</label>
+                  <input id="faultRangeMax" class="max" name="max" type="range" step="1" min="0" max="3000" />
                 </div>
               </div> 
             </form>
