@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta id="url-base" data-name="{{ url_for('home') }}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('frontend', path='/static/favicon/apple-touch-icon.png') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('frontend', path='/static/favicon/favicon-32x32.png') }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('frontend', path='static/favicon/favicon-16x16.png') }}">
@@ -16,6 +17,8 @@
     <link rel="stylesheet" href="{{ url_for('frontend', path='/spectre-css/dist/spectre-exp.min.css') }}" />
     <link rel="stylesheet" href="{{ url_for('frontend', path='/spectre-css/dist/spectre-icons.min.css') }}" />
     <link rel="stylesheet" href="{{ url_for('frontend', path='/static/styles.css') }}" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {% block extraStylesheet %}{% endblock %}
     <title>{% block title %}{% endblock %}</title>
   </head>
 
@@ -35,6 +38,7 @@
       </section>
     </header>
     {% block content %} {% endblock %}
+    <script src="{{ url_for('frontend', path='/static/script.js') }}"></script>
   </body>
 </html>
 

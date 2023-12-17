@@ -1,0 +1,315 @@
+{% extends "base.html" %}
+{% block title %}Page Replacement - Visualize{% endblock %}
+{% block content %}
+<main class="container">
+    <div class="text-center">
+      <h4 class="s-subtitle">Settings</h4>
+    </div>
+    <div class="columns">
+      <div class="column col-8 col-md-12 col-mx-auto text-center">
+        <p>
+          To be able to start, a valid reference string must first be created.
+          You can either have this generated or enter it yourself (1, 3, 4, 5,
+          2, ...). When generating, you also have the advantage of activating
+          localization in order to obtain a more realistic output.
+        </p>
+      </div>
+    </div>
+    <div class="columns">
+      <div class="column col-5 col-md-12 col-mx-auto">
+        <div class="columns">
+          <div class="column col-12 col-md-12">
+            <form class="form-horizontal" id="refStringForm">
+              <div class="form-group">
+                <div class="col-2">
+                  <label class="form-label" for="lengthInpt">Length:</label>
+                </div>
+                <div class="col-3">
+                  <div class="float-right">
+                    <input
+                      class="form-input"
+                      id="lengthInpt"
+                      type="number"
+                      placeholder="10"
+                      value="10"
+                      max="30"
+                      min="4"
+                    />
+                  </div>
+                </div>
+                <div class="col-2"></div>
+                <div class="col-3">
+                  <label class="form-label" for="localizationTggl"
+                    >Localization:</label
+                  >
+                </div>
+                <div class="col-2">
+                  <label class="form-switch float-right">
+                    <input type="checkbox" id="localizationTggl" />
+                    <i class="form-icon"></i>
+                  </label>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-12 col-md-12">
+                  <div class="float-right">
+                    <button class="btn btn-primary" id="generateBtn">Generate</button>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-12 col-md-12">
+                  <div class="form-group has-icon-right">
+                    <input
+                      class="form-input"
+                      type="text"
+                      id="refStringInpt"
+                      placeholder="Type in or generate reference string"
+                    />
+                    <i class="form-icon loading" id="refStringFormLoading" style="display:none;"></i>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="columns">
+      <div class="column col-4 col-md-12 col-mx-auto">
+        <hr class="seperator" />
+      </div>
+    </div>
+    
+    <div class="text-center">
+      <h4 class="s-subtitle">Faults by specific frame size</h4>
+    </div>
+    <div class="columns">
+      <div class="column col-5 col-md-12 col-mx-auto">
+        <form class="form-horizontal" id="faultsSpecificForm">
+          <div class="form-group columns">
+            <div class="column col-1"></div>
+            <div class="column col-2">
+              <label class="form-checkbox">
+                <input type="checkbox" id="faultsAllSlct" /><i class="form-icon"></i>All
+              </label>
+            </div>
+            <div class="column col-2">
+              <label class="form-checkbox">
+                <input type="checkbox" id="faultsFifoSlct" /><i class="form-icon"></i>
+                FIFO
+              </label>
+            </div>
+  
+            <div class="column col-2">
+              <label class="form-checkbox form-inline">
+                <input type="checkbox" id="faultsOptSlct"/><i class="form-icon"></i>
+                OPT
+              </label>
+            </div>
+  
+            <div class="column col-2">
+              <label class="form-checkbox form-inline">
+                <input type="checkbox" id="faultsScSlct" /><i class="form-icon"></i>
+                SC
+              </label>
+            </div>
+  
+            <div class="column col-2">
+              <label class="form-checkbox form-inline">
+                <input type="checkbox" id="faultsLruSlct" /><i class="form-icon"></i>
+                LRU
+              </label>
+            </div>
+            <div class="column col-1"></div>
+          </div>
+          <div class="form-group columns">
+            <!--div class="col-1"></div-->
+            <div class="col-2 col-md-4">
+              <label class="form-label" for="frameInpt">Frames:</label>
+            </div>
+            <div class="col-2 col-md-4">
+              <div class="float-right">
+                <input
+                  class="form-input"
+                  id="frameInpt"
+                  type="number"
+                  placeholder="00"
+                  value="2"
+                  max="30"
+                  min="2"
+                />
+              </div>
+            </div>
+            <div class="col-8 col-md-4">
+              <div class="float-right">
+                <button class="btn" id="faultsCompareBtn">Compare</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="columns">
+      <div class="column col-10 col-md-12 col-mx-auto">
+        <canvas id="myChart"></canvas>
+      </div>
+    </div>
+    <div class="columns">
+      <div class="column col-4 col-md-12 col-mx-auto">
+        <hr class="seperator" />
+      </div>
+    </div>
+    <div class="text-center">
+      <h4 class="s-subtitle">Faults by specific frame size</h4>
+    </div>
+    <div class="columns">
+      <div class="column col-5 col-md-12 col-mx-auto">
+        <form class="form-horizontal">
+          <div class="form-group columns">
+            <div class="column col-1"></div>
+            <div class="column col-2">
+              <label class="form-checkbox">
+                <input type="checkbox" /><i class="form-icon"></i>All
+              </label>
+            </div>
+            <div class="column col-2">
+              <label class="form-checkbox">
+                <input type="checkbox" checked="" /><i class="form-icon"></i>
+                FIFO
+              </label>
+            </div>
+  
+            <div class="column col-2">
+              <label class="form-checkbox form-inline">
+                <input type="checkbox" checked="" /><i class="form-icon"></i>
+                OPT
+              </label>
+            </div>
+  
+            <div class="column col-2">
+              <label class="form-checkbox form-inline">
+                <input type="checkbox" checked="" /><i class="form-icon"></i>
+                SC
+              </label>
+            </div>
+  
+            <div class="column col-2">
+              <label class="form-checkbox form-inline">
+                <input type="checkbox" checked="" /><i class="form-icon"></i>
+                LRU
+              </label>
+            </div>
+            <div class="column col-1"></div>
+          </div>
+          <div class="form-group columns">
+            <!--div class="col-1"></div-->
+            <div class="col-2 col-md-4">
+              <label class="form-label" for="lengthInput">Frames from:</label>
+            </div>
+            <div class="col-2 col-md-4">
+              <div class="float-right">
+                <input
+                  class="form-input"
+                  id="lengthInput"
+                  type="number"
+                  placeholder="00"
+                  value="2"
+                  max="30"
+                  min="2"
+                />
+              </div>
+            </div>
+            <div class="col-1"></div>
+            <div class="col-2 col-md-4">
+              <label class="form-label" for="lengthInput">to:</label>
+            </div>
+            <div class="col-2 col-md-4">
+              <div class="float-right">
+                <input
+                  class="form-input"
+                  id="lengthInput"
+                  type="number"
+                  placeholder="00"
+                  value="2"
+                  max="30"
+                  min="2"
+                />
+              </div>
+            </div>
+            <div class="col-3 col-md-4">
+              <div class="float-right">
+                <button class="btn">Compare</button>
+              </div>
+            </div>
+            <!--div class="col-1"></div-->
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="columns">
+      <div class="column col-4 col-md-12 col-mx-auto">
+        <hr class="seperator" />
+      </div>
+    </div>
+    <!-- Memory View -->
+    <div class="text-center">
+      <h4 class="s-subtitle">Memory Layout</h4>
+    </div>
+    <div class="columns">
+      <div class="column col-5 col-md-12 col-mx-auto">
+        <form class="form-horizontal" id="faultsSpecificForm">
+          <div class="form-group columns">
+            <div class="column col-1"></div>
+            <div class="column col-2">
+              <label class="form-checkbox">
+                <input type="checkbox" id="faultsAllSlct" /><i class="form-icon"></i>All
+              </label>
+            </div>
+            <div class="column col-2">
+              <label class="form-checkbox">
+                <input type="checkbox" id="faultsFifoSlct" /><i class="form-icon"></i>
+                FIFO
+              </label>
+            </div>
+  
+            <div class="column col-2">
+              <div class="form-group">
+                <select class="form-select">
+                  <option>Choose an option</option>
+                  <option>Slack</option>
+                  <option>Skype</option>
+                  <option>Hipchat</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="form-group columns">
+            <!--div class="col-1"></div-->
+            <div class="col-2 col-md-4">
+              <label class="form-label" for="frameInpt">Frames:</label>
+            </div>
+            <div class="col-2 col-md-4">
+              <div class="float-right">
+                <input
+                  class="form-input"
+                  id="frameInpt"
+                  type="number"
+                  placeholder="00"
+                  value="2"
+                  max="30"
+                  min="2"
+                />
+              </div>
+            </div>
+            <div class="col-8 col-md-4">
+              <div class="float-right">
+                <button class="btn" id="faultsCompareBtn">Compare</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>    
+</main>
+{% endblock%}

@@ -46,9 +46,7 @@ class FaultsMemoryFrameSC(FaultsMemoryFrame):
     CursorPosition: int = Field(description = "Position of the SC cursor after performing the current operation")
     ModifiedBit: int = Field(description = "Value of the modified bit")
 
-   
+
 class FaultsMemoryView(BaseModel):
     PageReplaceAlgorithm: PRAlgorithm = Field(description = "Name of the page replacement algorithm used")
-    MemoryTable: list[FaultsMemoryFrame] = Field(description = "List of the memory frames")
-
-
+    MemoryTable: list[FaultsMemoryFrame | FaultsMemoryFrameSC] = Field(description = "List of the memory frames")
