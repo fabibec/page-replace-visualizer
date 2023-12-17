@@ -331,7 +331,6 @@ faultRangeForm.addEventListener('submit', async event => {
               + '&OPT=' + opt
               + '&base64=' + true);
       const resData = await res.json();
-      //console.log(resData);
 
       if(!res.ok){
         console.log(res.statusText);
@@ -340,7 +339,7 @@ faultRangeForm.addEventListener('submit', async event => {
             console.log(resData.detail);
         }
       }else{
-        //updateFaultRangeComparisonChart(resData);
+        updateFaultRangeComparisonChart(resData);
       }
     } catch (err) {
       console.log(err);
@@ -350,4 +349,56 @@ faultRangeForm.addEventListener('submit', async event => {
   }
 
   button.classList.toggle('loading');
+});
+
+function updateFaultRangeComparisonChart(resData) {
+  const labels = [];
+  let data = [];
+  let i = 0; //to detect first element --> duplicate labels
+
+  //reset chart
+  faultRangeComparisonChart.data.datasets = [];
+
+  for (key in resData) {
+    resData[key].forEach((item) => {
+      data.push(item.Faults);
+      if (i === 0){
+        labels.push(item.Frames);
+      }
+    })
+
+    i = 1;
+
+    const color = getColorForAlgorithm(key);
+
+    const newDataset = {
+      label: key,
+      data: data,
+      backgroundColor: color.backgroundColor,
+      borderColor: color.borderColor,
+      borderWidth: 2,
+      fill: false
+    };
+
+    faultRangeComparisonChart.data.datasets.push(newDataset);
+  }
+
+  faultRangeComparisonChart.data.labels = labels;
+  faultRangeComparisonChart.update();
+  faultRangeComparisonCanvas.style.display = 'block';
+}
+
+const faultRangeComparisonCanvas = document.getElementById('faultRangeComparisonCanvas');
+faultRangeComparisonCanvas.style.display = 'none';
+
+let faultRangeComparisonChart = new Chart(faultRangeComparisonCanvas, {
+type: 'bar',
+options: {
+  indexAxis: 'x',
+  scales: {
+    y: {
+      beginAtZero: true
+    }
+  }
+}
 });
