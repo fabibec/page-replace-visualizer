@@ -318,7 +318,7 @@ faultRangeForm.addEventListener('submit', async event => {
 
   button.classList.toggle('loading');
 
-  if(frameMin < frameMax){
+  if(parseInt(frameMin) < parseInt(frameMax)){
     try {
       const res =
           await fetch(
@@ -331,7 +331,6 @@ faultRangeForm.addEventListener('submit', async event => {
               + '&OPT=' + opt
               + '&base64=' + true);
       const resData = await res.json();
-      //console.log(resData);
 
       if(!res.ok){
         console.log(res.statusText);
