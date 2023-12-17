@@ -122,7 +122,7 @@ async def Page_Faults_compare(
 @app.get("/api/faults/compare/range", tags=["compareFaultsRange"], response_model=FaultsRange, response_model_exclude_none=True)
 async def Page_Faults_compare_over_Range(
         referenceString: str,
-        minFrames: Annotated[int, Query(title="Maximum number of Frames", ge=c.FRAMES_MIN_VALUE, lt=c.FRAMES_MAX_VALUE)] = c.FRAMES_MIN_VALUE,
+        minFrames: Annotated[int, Query(title="Minimum number of Frames", ge=c.FRAMES_MIN_VALUE, lt=c.FRAMES_MAX_VALUE)] = c.FRAMES_MIN_VALUE,
         maxFrames: Annotated[int, Query(title="Maximum number of Frames", gt=c.FRAMES_MIN_VALUE,le=c.FRAMES_MAX_VALUE)] = c.FRAMES_DEFAULT_VALUE,
         FIFO: Annotated[bool, Query(title="First-in-First-out Algorithm")] = True,
         SC: Annotated[bool, Query(title="Second-Chance Algorithm")] = True,
