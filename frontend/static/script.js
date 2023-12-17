@@ -318,7 +318,7 @@ faultRangeForm.addEventListener('submit', async event => {
 
   button.classList.toggle('loading');
 
-  if(frameMin < frameMax){
+  if(parseInt(frameMin) < parseInt(frameMax)){
     try {
       const res =
           await fetch(
