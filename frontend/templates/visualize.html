@@ -42,10 +42,9 @@
                 type="text"
                 id="refStrInpt"
                 placeholder="Type in or generate reference string"
-                onchange="flagRefStrInptField();"
-                onsubmit="return false;"
+                onsubmit="noEnter();"
               />
-              <p class="form-input-hint" id="refStrInptMsg" style="display: none;">Please generate or insert a reference string!</p>
+              <p class="form-input-hint" id="refStrInptMsg"></p>
             </div>
             <div class="form-group">
               <!--Add class loading when calling API-->
@@ -80,6 +79,7 @@
                   <input type="checkbox" name="faults" id="faultsOptSlct"><i class="form-icon"></i>OPT
                 </label>
                 <button class="btn form-inline float-right" id="faultsCompareBtn">Compare</button>
+                <p class="form-input-hint" id="faultsMsg"></p>
               </div>
               <div class="form-group">
                 <label class="form-label form-inline float-left" for="faultsFrameSize">Length:</label>
@@ -88,9 +88,8 @@
               </div>
             </form>
           <div class="divider text-center" data-content="Chart"></div>
-
-          <canvas id="faultComparisonCanvas"></canvas>  
-        </div>
+            <canvas id="faultComparisonCanvas"></canvas>  
+          </div>
         <div class="card-body ">
         </div>
       </div>
@@ -119,11 +118,10 @@
                 <button class="btn form-inline float-right" id="faultsRangeCompareBtn">Compare</button>
               </div>
               <div class="form-group">
-                <div class="min-max-slider" data-legendnum="2">
-                  <label for="min">Minimum price</label>
-                  <input id="min" class="min" name="min" type="range" step="1" min="0" max="3000" />
-                  <label for="max">Maximum price</label>
-                  <input id="max" class="max" name="max" type="range" step="1" min="0" max="3000" />
+                <label class="form-label">Range:</label>
+                <div class="input-group">
+                  <input class="form-input" id="faultsRangeMinVal" min=1 max=11 value=5 type="number">
+                  <input class="form-input" id="faultsRangeMaxVal" min=2 max=12 value=10 type="number">
                 </div>
               </div> 
             </form>
