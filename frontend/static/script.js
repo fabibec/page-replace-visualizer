@@ -318,7 +318,8 @@ faultRangeForm.addEventListener('submit', async event => {
 
   button.classList.toggle('loading');
 
-  try {
+  if(frameMin < frameMax){
+    try {
       const res =
           await fetch(
               api + 'faults/compare/range?referenceString=' + refString
@@ -341,10 +342,12 @@ faultRangeForm.addEventListener('submit', async event => {
       }else{
         //updateFaultRangeComparisonChart(resData);
       }
-  } catch (err) {
-    console.log(err);
+    } catch (err) {
+      console.log(err);
+    }
+  }else{
+    console.log("min must be less than max");
   }
 
   button.classList.toggle('loading');
-
 });
