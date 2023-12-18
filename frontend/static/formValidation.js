@@ -7,6 +7,7 @@ const faultRangeForm = document.getElementById('faultRangeForm');
 const memoryViewForm = document.getElementById('memoryViewForm');
 const faultsRangeMinVal = document.getElementById('faultsRangeMinVal');
 const faultsRangeMaxVal = document.getElementById('faultsRangeMaxVal');
+const eventList = ['input', 'keydown', 'paste', 'change'];
 
 /* General Validation functions*/
 const showError = (input, message) => {
@@ -49,7 +50,7 @@ const debounce = (fn, delay = 500) => {
 };
 
 const isRefStringValid = (refStr) => {
-  const re = /^[\w\s]+(,[\w\s]+)*$/;
+  const re = /^[\w\s]+(,[\w\s]+){3,29}$/;
   return re.test(refStr);
 };
 
@@ -72,15 +73,17 @@ refStringForm.addEventListener('submit', async event => {
 });
 
 // Validate Reference String input from user
-refStringForm.addEventListener('input', debounce(function (e) {
-    let refString = document.getElementById('refStrInpt').value;
-    if(!isRefStringValid(refString) || isEmpty(refString)){
-        showError(refStrInpt, 'Please provide or generate a valid reference string.');
-        return;
-    } else {
-        showSuccess(refStrInpt);
-    }
-}))
+eventList.forEach(event => refStrInpt.addEventListener(event, debounce(() => validateReferenceString())));
+
+function validateReferenceString() {
+  let refString = document.getElementById('refStrInpt').value;
+  if(isEmpty(refString) || !isRefStringValid(refString)){
+      showError(refStrInpt, 'Please provide or generate a valid reference string.');
+      return;
+  } else {
+      showSuccess(refStrInpt);
+  }
+}
 
 async function submitReferenceString(event) {
     event.preventDefault();
@@ -155,6 +158,18 @@ async function submitFaults(event) {
 }
 
 /* Faults by Range Form */
+eventList.forEach(event => faultsRangeMinVal.addEventListener(event, debounce(() => validateRange(faultsRangeMinVal.value, faultsRangeMaxVal.value))));
+eventList.forEach(event => faultsRangeMaxVal.addEventListener(event, debounce(() => validateRange(faultsRangeMinVal.value, faultsRangeMaxVal.value))));
+
+function validateRange(minFrames, maxFrames) {
+  let msg = document.getElementById('faultsFrameRangeMsg');
+  if(!isRangeValid(minFrames, maxFrames)){
+    showError(msg, 'Please provide a valid range between 2 and 12.');
+    return;
+  }
+  showSuccess(msg);
+}
+
 faultRangeForm.addEventListener('submit', async event => {submitFaultsRange(event)});
 
 async function submitFaultsRange(event) {
@@ -193,7 +208,7 @@ async function submitFaultsRange(event) {
       return;
     }
 
-    showSuccess(msg)
+    showSuccess(msg);
     button.classList.toggle('loading');
 
     try {
