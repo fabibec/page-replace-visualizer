@@ -64,6 +64,8 @@ refStringForm.addEventListener('submit', async event => {
     let input = document.getElementById('refStrInpt');
     let button = document.getElementById('generateRefStr');
 
+    console.log(api);
+
     button.classList.toggle('loading');
 
     try {
@@ -229,6 +231,7 @@ faultForm.addEventListener('submit', async event => {
               + '&OPT=' + opt
               + '&base64=' + true);
       const resData = await res.json();
+      console.log(resData);
       updateFaultComparisonChart(resData);
 
   } catch (err) {
@@ -240,21 +243,25 @@ faultForm.addEventListener('submit', async event => {
 });
 
 function updateFaultComparisonChart(resData) {
-      const labels = [];
-      const data = [];
-      const backgroundColor = [];
-      const borderColor = [];
+      //reset chart
+      faultComparisonChart.data.datasets = [];
+
       for (key in resData) {
-        labels.push(key);
-        data.push(resData[key]);
         const color = getColorForAlgorithm(key);
-        backgroundColor.push(color.backgroundColor);
-        borderColor.push(color.borderColor);
+    
+        const newDataset = {
+          label: key,
+          data: [resData[key]],
+          backgroundColor: color.backgroundColor,
+          borderColor: color.borderColor,
+          borderWidth: 2,
+          maxBarThickness: 250
+        };
+    
+        faultComparisonChart.data.datasets.push(newDataset);
       }
-      faultComparisonChart.data.labels = labels;
-      faultComparisonChart.data.datasets[0].data = data;
-      faultComparisonChart.data.datasets[0].backgroundColor = backgroundColor;
-      faultComparisonChart.data.datasets[0].borderColor = borderColor;
+
+      faultComparisonChart.data.labels = [document.getElementById('faultsFrameSize').value];
       faultComparisonChart.update();
       faultComparisonCanvas.style.display = 'block';
 }
@@ -280,15 +287,8 @@ faultComparisonCanvas.style.display = 'none';
 let faultComparisonChart = new Chart(faultComparisonCanvas, {
     type: 'bar',
     data: {
-      labels: [],
-      datasets: [{
-        label: 'Page Faults',
-        data: [],
-        borderWidth: 2,
-        backgroundColor: [],
-        borderColor: [],
-        maxBarThickness: 250
-      }]
+      labels: [''],
+      datasets: []
     },
     options: {
       scales: {
