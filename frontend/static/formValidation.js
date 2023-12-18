@@ -49,11 +49,22 @@ const debounce = (fn, delay = 500) => {
 };
 
 const isRefStringValid = (refStr) => {
-    const re = /^[\w\s]+(,[\w\s]+)*$/;
-    return re.test(refStr);
+  const re = /^[\w\s]+(,[\w\s]+)*$/;
+  return re.test(refStr);
+};
+
+const isRangeValid = (minVal, maxVal) => {
+  minVal = Number(minVal);
+  maxVal = Number(maxVal);
+  if(!(Number.isNaN(minVal)) && !(Number.isNaN(maxVal)) ) {
+    return minVal > 1 && maxVal < 13 && minVal < maxVal;
+  }
+    return false;
 };
 
 const isEmpty = value => value === '' ? true : false;
+
+const isNumber = value => typeof value === Number;
 
 /* Reference String Form */
 refStringForm.addEventListener('submit', async event => {
@@ -90,6 +101,7 @@ async function submitReferenceString(event) {
     }
 
     button.classList.toggle('loading');
+    showSuccess(refStrInpt);
 }
 
 /* Faults From */
@@ -98,7 +110,7 @@ faultForm.addEventListener('submit', async event => {submitFaults(event)});
 async function submitFaults(event) {
     event.preventDefault();
 
-    let refString = document.getElementById('refStrInpt').value;
+    let refString = refStrInpt.value;
 
     // validate Ref String
     if(!isRefStringValid(refString) || isEmpty(refString)){
@@ -118,7 +130,7 @@ async function submitFaults(event) {
 
     // Show error if item is empty
     if (!(opt || fifo || sc || lru)){
-        showError(msg, 'Please select at least one algorithm');
+        showError(msg, 'Please select at least one algorithm.');
         return;
     };
 
@@ -143,17 +155,44 @@ async function submitFaults(event) {
 }
 
 /* Faults by Range Form */
+faultRangeForm.addEventListener('submit', async event => {submitFaultsRange(event)});
 
-faultsRangeMinVal.addEventListener('change', validateMax);
-faultsRangeMinVal.addEventListener('input', validateMax);
-faultsRangeMinVal.addEventListener('keyup', validateMax);
-faultsRangeMinVal.addEventListener('paste', validateMax);
+function submitFaultsRange(event) {
+  event.preventDefault();
 
-function validateMax () {
-    if (faultsRangeMaxVal.value > faultsRangeMinVal.max + 1) {
-        
+  let refString = refStrInpt.value;
+
+    if(!isRefStringValid(refString) || isEmpty(refString)){
+        showError(refStrInpt, 'Please provide or generate a valid reference string.');
+        return;
     }
-    faultsRangeMaxVal.min = faultsRangeMinVal.max + 1; 
+
+    showSuccess(refStrInpt);
+
+    let opt = document.getElementById('faultsRangeOptSlct').checked;
+    let fifo = document.getElementById('faultsRangeFifoSlct').checked;
+    let sc = document.getElementById('faultsRangeScSlct').checked;
+    let lru = document.getElementById('faultsRangeLruSlct').checked; 
+    let minFrames = faultsRangeMinVal.value;
+    let maxFrames = faultsRangeMaxVal.value;
+    let msg = document.getElementById('faultsRangeMsg');
+    refString = btoa(refString);
+
+    if (!(opt || fifo || sc || lru)){
+      showError(msg, 'Please select at least one algorithm.');
+      return;
+    };
+
+    showSuccess(msg);
+
+    msg = document.getElementById('faultsFrameRangeMsg');
+
+    if(!isRangeValid(minFrames, maxFrames)){
+      showError(msg, 'Please provide a valid range between 2 and 12.');
+      return;
+    }
+
+    showSuccess(msg)
 
 
 }
@@ -164,6 +203,16 @@ memoryViewForm.addEventListener('submit', async event => {submitMemoryView(event
 
 async function submitMemoryView(event) {
     event.preventDefault();
+
+    let refString = refStrInpt.value;
+
+    if(!isRefStringValid(refString) || isEmpty(refString)){
+        showError(refStrInpt, 'Please provide or generate a valid reference string.');
+        return;
+    }
+
+    showSuccess(refStrInpt);
+
     let selectVal = document.getElementById('algorithmSelect').value;
     let AlgorithmVals = new Array(4).fill(false);
 
@@ -184,7 +233,7 @@ async function submitMemoryView(event) {
         AlgorithmVals[0] = true;
     }
 
-    let refString = btoa(document.getElementById('refStrInpt').value);
+    refString = btoa(refString);
     let frames = document.getElementById('memoryFrameSize').value;
 
     try {

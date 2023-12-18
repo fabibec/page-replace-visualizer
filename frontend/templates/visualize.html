@@ -22,6 +22,8 @@
           </div>
           <div class="divider text-center" data-content="Reference String"></div>
           <form id="refStringForm">
+             <!-- Prevent implicit submission of the form -->
+            <button type="submit" disabled style="display: none" aria-hidden="true"></button>
             <div class="form-group">
               <label class="form-label form-inline float-left" for="refStrSize">Length:</label>
               <label class="form-label form-inline float-right" id="refStrSizeValue" for="refStrSize">10</label>
@@ -42,13 +44,12 @@
                 type="text"
                 id="refStrInpt"
                 placeholder="Type in or generate reference string"
-                onsubmit="noEnter();"
               />
               <p class="form-input-hint" id="refStrInptMsg"></p>
             </div>
             <div class="form-group">
               <!--Add class loading when calling API-->
-              <button class="btn btn-primary" id="generateRefStr">Generate</button>
+              <button class="btn btn-primary" id="generateRefStr" type="submit">Generate</button>
             </div>
           </form>
         </div>
@@ -104,25 +105,27 @@
                   <input type="checkbox"><i class="form-icon" onClick="toggleAllCheckboxes(this, 'faults')"></i>Select All
                 </label>
                 <label class="form-checkbox form-inline">
-                  <input type="checkbox" name="faults" checked=""><i class="form-icon"></i>FIFO
+                  <input type="checkbox" name="faults" id="faultsRangeFifoSlct" checked=""><i class="form-icon"></i>FIFO
                 </label>
                 <label class="form-checkbox form-inline">
-                  <input type="checkbox" name="faults" checked=""><i class="form-icon"></i>SC
+                  <input type="checkbox" name="faults" id="faultsRangeScSlct" checked=""><i class="form-icon"></i>SC
                 </label>
                 <label class="form-checkbox form-inline">
-                  <input type="checkbox" name="faults"><i class="form-icon"></i>LRU
+                  <input type="checkbox" name="faults" id="faultsRangeLruSlct" ><i class="form-icon"></i>LRU
                 </label>
                 <label class="form-checkbox form-inline">
-                  <input type="checkbox" name="faults"><i class="form-icon"></i>OPT
+                  <input type="checkbox" name="faults" id="faultsRangeOptSlct"><i class="form-icon"></i>OPT
                 </label>
                 <button class="btn form-inline float-right" id="faultsRangeCompareBtn">Compare</button>
+                <p class="form-input-hint" id="faultsRangeMsg"></p>
               </div>
               <div class="form-group">
                 <label class="form-label">Range:</label>
                 <div class="input-group">
-                  <input class="form-input" id="faultsRangeMinVal" min=1 max=11 value=5 type="number">
-                  <input class="form-input" id="faultsRangeMaxVal" min=2 max=12 value=10 type="number">
+                  <input class="form-input" id="faultsRangeMinVal" min=2 max=11 value=5 type="number">
+                  <input class="form-input" id="faultsRangeMaxVal" min=3 max=12 value=10 type="number">
                 </div>
+                <p class="form-input-hint" id="faultsFrameRangeMsg"></p>
               </div> 
             </form>
           <div class="divider text-center" data-content="Chart"></div>

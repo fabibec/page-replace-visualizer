@@ -5,6 +5,7 @@ html {
 
 body { 
   padding-top: 5.5rem;
+  overflow-y: hidden;
 }
 
 .seperator {
@@ -40,6 +41,7 @@ body {
 .card-scroll {
   margin-bottom: 5rem;
 }
+
 
 .algorithm {
   margin-bottom: 2rem;
