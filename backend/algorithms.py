@@ -186,7 +186,7 @@ def sc(frames : int, referenceString : list[str], memoryView = False) -> int | F
                 MemoryView = frameList,
                 PageFault = isPageFault,
                 CursorPosition = ptr,
-                ModifiedBit = refBitList[ptr])
+                ModifiedBits = refBitList)
             memTable.append(f)
 
         print(f"Frames {frameList} | Modified Bit {refBitList} | Page Faults {pageFaults} | isPageFault {isPageFault} | Page {page} | PointerPos {ptr}")

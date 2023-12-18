@@ -22,6 +22,8 @@
           </div>
           <div class="divider text-center" data-content="Reference String"></div>
           <form id="refStringForm">
+             <!-- Prevent implicit submission of the form -->
+            <button type="submit" disabled style="display: none" aria-hidden="true"></button>
             <div class="form-group">
               <label class="form-label form-inline float-left" for="refStrSize">Length:</label>
               <label class="form-label form-inline float-right" id="refStrSizeValue" for="refStrSize">10</label>
@@ -35,16 +37,19 @@
               </label>
             </div>
             <div class="form-group">
+              <!--Prevent Enter submit-->
+              <input type="number" style="display: none;"/>
               <input
                 class="form-input"
                 type="text"
                 id="refStrInpt"
                 placeholder="Type in or generate reference string"
               />
+              <p class="form-input-hint" id="refStrInptMsg"></p>
             </div>
             <div class="form-group">
               <!--Add class loading when calling API-->
-              <button class="btn btn-primary" id="generateRefStr">Generate</button>
+              <button class="btn btn-primary" id="generateRefStr" type="submit">Generate</button>
             </div>
           </form>
         </div>
@@ -75,6 +80,7 @@
                   <input type="checkbox" name="faults" id="faultsOptSlct"><i class="form-icon"></i>OPT
                 </label>
                 <button class="btn form-inline float-right" id="faultsCompareBtn">Compare</button>
+                <p class="form-input-hint" id="faultsMsg"></p>
               </div>
               <div class="form-group">
                 <label class="form-label form-inline float-left" for="faultsFrameSize">Length:</label>
@@ -83,9 +89,8 @@
               </div>
             </form>
           <div class="divider text-center" data-content="Chart"></div>
-
-          <canvas id="faultComparisonCanvas"></canvas>  
-        </div>
+            <canvas id="faultComparisonCanvas"></canvas>  
+          </div>
         <div class="card-body ">
         </div>
       </div>
@@ -100,6 +105,27 @@
                   <input type="checkbox" onClick="toggleAllCheckboxes(this, 'faultsRange');"><i class="form-icon" ></i>Select All
                 </label>
                 <label class="form-checkbox form-inline">
+<<<<<<< HEAD
+                  <input type="checkbox" name="faults" id="faultsRangeFifoSlct" checked=""><i class="form-icon"></i>FIFO
+                </label>
+                <label class="form-checkbox form-inline">
+                  <input type="checkbox" name="faults" id="faultsRangeScSlct" checked=""><i class="form-icon"></i>SC
+                </label>
+                <label class="form-checkbox form-inline">
+                  <input type="checkbox" name="faults" id="faultsRangeLruSlct" ><i class="form-icon"></i>LRU
+                </label>
+                <label class="form-checkbox form-inline">
+                  <input type="checkbox" name="faults" id="faultsRangeOptSlct"><i class="form-icon"></i>OPT
+                </label>
+                <button class="btn form-inline float-right" id="faultsRangeCompareBtn">Compare</button>
+                <p class="form-input-hint" id="faultsRangeMsg"></p>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Range:</label>
+                <div class="input-group">
+                  <input class="form-input" id="faultsRangeMinVal" min=2 max=11 value=5 type="number">
+                  <input class="form-input" id="faultsRangeMaxVal" min=3 max=12 value=10 type="number">
+=======
                   <input type="checkbox" id="faultRangeFifoSlct" name="faultsRange" checked=""><i class="form-icon"></i>FIFO
                 </label>
                 <label class="form-checkbox form-inline">
@@ -119,7 +145,9 @@
                   <input id="faultRangeMin" class="min" name="min" type="range" step="1" min="2" max="11" />
                   <label for="faultRangeMax">Maximum price</label>
                   <input id="faultRangeMax" class="max" name="max" type="range" step="1" min="3" max="12" />
+>>>>>>> dev
                 </div>
+                <p class="form-input-hint" id="faultsFrameRangeMsg"></p>
               </div> 
             </form>
           <div class="divider text-center" data-content="Chart"></div>
@@ -131,7 +159,7 @@
         </div> 
       </div>
       <!--Memory View-->
-      <div class="card card-scroll">
+      <div class="card card-last">
         <div class="card-header">
           <div class="card-title h3">Memory view</div>
           <div class="divider text-center" data-content="Settings"></div>
@@ -147,7 +175,7 @@
               </select>
             </div>  
             <div class="form-group">
-              <label class="form-label form-inline float-left" for="memoryFrameSize">Length:</label>
+              <label class="form-label form-inline float-left" for="memoryFrameSize">Frames:</label>
               <label class="form-label form-inline float-right" id="memoryFrameSizeValue" for="memoryFrameSize">6</label>
               <input class="slider tooltip" type="range" min="2" max="12" value="6" oninput="this.setAttribute('value', this.value);updateSliderValue('memoryFrameSize', 'memoryFrameSizeValue');" id="memoryFrameSize">
             </div> 

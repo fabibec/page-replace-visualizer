@@ -6,18 +6,25 @@
     <div class="column col-8 col-md-12 col-mx-auto landing-text-col">
       <div class="empty landing-text-container">
         <p class="empty-subtitle">
-          Page replacement algorithms are essential in computer science,
-        particularly in managing memory efficiently. As systems encounter
+        <b>Page replacement algorithms are essential in operating systems,
+        particularly in managing main memory efficiently.</b> <br> As systems encounter
         memory shortages, these algorithms play a vital role in deciding which
         pages should be swapped out from memory (page eviction) to accommodate
-        new ones (page allocation). Visualizing these algorithms provides a
+        new ones (page allocation).<br> Visualizing these algorithms provides a
         clearer understanding of their functionality and performance. This web
-        page serves as a visual aid to comprehend and compare popular page
-        replacement algorithms, namely First-In-First-Out (FIFO), Optimal
-        (OPT), Second Chance, and Least Recently Used (LRU). Leveraging the
-        power of Chart.js, a dynamic and intuitive JavaScript library, we
-        depict the behavior and efficiency of these algorithms in managing
-        memory pages.  
+        page serves as a visual aid to comprehend and compare popular <a href="{{ url_for('algorithms') }}">page replacement algorithms</a>
+        , namely:<br>
+        <ul>
+          <li>First-In-First-Out (<b>FIFO</b>)</li>
+          <li>Second Chance (<b>SC</b>)</li>
+          <li>Least Recently Used (<b>LRU</b>)</li>
+          <li>Optimal (<b>OPT</b>)</li>
+        </ul>
+        Through interactive Chart.js visualizations, this webpage illustrates
+        the number of page faults incurred by each algorithm under various
+        scenarios. Users can explore and compare the efficiency of these
+        algorithms in managing memory resources, gaining insights into their
+        strengths and limitations.  
         </p>
         <div class="empty-action">
           <button class="btn btn-primary" onclick="window.location.href='{{ url_for('visualize') }}';">Try it!</button>
