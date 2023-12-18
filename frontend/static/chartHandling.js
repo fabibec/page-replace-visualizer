@@ -151,8 +151,8 @@ function updateFaultRangeComparisonChart(resData) {
     };
 
     faultRangeComparisonChart.data.datasets.push(newDataset);
+    data = [];
   }
-
   faultRangeComparisonChart.data.labels = labels;
   faultRangeComparisonChart.update();
   faultRangeComparisonCanvas.style.display = 'block';
