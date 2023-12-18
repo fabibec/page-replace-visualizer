@@ -248,7 +248,7 @@ function updateFaultComparisonChart(resData) {
 
       for (key in resData) {
         const color = getColorForAlgorithm(key);
-    
+
         const newDataset = {
           label: key,
           data: [resData[key]],
@@ -257,7 +257,7 @@ function updateFaultComparisonChart(resData) {
           borderWidth: 2,
           maxBarThickness: 250
         };
-    
+
         faultComparisonChart.data.datasets.push(newDataset);
       }
 
@@ -298,3 +298,51 @@ let faultComparisonChart = new Chart(faultComparisonCanvas, {
       }
     }
   });
+
+  // Fault Range form validation
+faultRangeForm.addEventListener('submit', async event => {
+  event.preventDefault();
+
+  let opt = document.getElementById('faultRangeOptSlct').checked;
+  let fifo = document.getElementById('faultRangeFifoSlct').checked;
+  let sc = document.getElementById('faultRangeScSlct').checked;
+  let lru = document.getElementById('faultRangeLruSlct').checked;
+  let refString = btoa(document.getElementById('refStrInpt').value);
+  let frameMin = document.getElementById('faultRangeMin').value;
+  let frameMax = document.getElementById('faultRangeMax').value;
+  let button = document.getElementById('faultRangeCompareBtn');
+
+  button.classList.toggle('loading');
+
+  if(parseInt(frameMin) < parseInt(frameMax)){
+    try {
+      const res =
+          await fetch(
+              api + 'faults/compare/range?referenceString=' + refString
+              + '&minFrames=' + frameMin
+              + '&maxFrames=' + frameMax
+              + '&FIFO=' + fifo
+              + '&SC=' + sc
+              + '&LRU=' + lru
+              + '&OPT=' + opt
+              + '&base64=' + true);
+      const resData = await res.json();
+
+      if(!res.ok){
+        console.log(res.statusText);
+        switch(res.status){
+          case 422:
+            console.log(resData.detail);
+        }
+      }else{
+        //updateFaultRangeComparisonChart(resData);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }else{
+    console.log("min must be less than max");
+  }
+
+  button.classList.toggle('loading');
+});
