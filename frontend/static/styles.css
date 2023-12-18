@@ -1,11 +1,5 @@
-html {
-  margin: 0;
-  padding: 0;
-}
-
 body { 
   padding-top: 5.5rem;
-  overflow-y: hidden;
 }
 
 .seperator {
@@ -35,13 +29,12 @@ body {
 }
 
 .landing-text-col, .error-text-col {
-  margin-top: 6%;
+  margin-top: 4%;
 }
 
 .card-scroll {
   margin-bottom: 2rem;
 }
-
 
 .algorithm {
   margin-bottom: 2rem;

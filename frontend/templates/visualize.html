@@ -6,7 +6,7 @@
   <div class="columns">
     <!--Fixed Sidebar-->
     <div class="column col-4 col-fixed">
-      <div class="card">
+      <div class="card card-last">
         <div class="card-header">
           <div class="card-title h3">Global Settings</div>
         </div>
@@ -167,4 +167,7 @@
     </div>
   </div>
 </main>
+<script src="{{ url_for('frontend', path='/static/script.js') }}"></script>
+<script src="{{ url_for('frontend', path='/static/formValidation.js') }}"></script>
+<script src="{{ url_for('frontend', path='/static/chartHandling.js') }}"></script>
 {% endblock%}
