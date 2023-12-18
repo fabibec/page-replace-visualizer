@@ -39,10 +39,14 @@ body {
 }
 
 .card-scroll {
-  margin-bottom: 5rem;
+  margin-bottom: 2rem;
 }
 
 
 .algorithm {
   margin-bottom: 2rem;
+}
+
+.card-last {
+  margin-bottom: 7rem;
 }
