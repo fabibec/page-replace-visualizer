@@ -53,7 +53,7 @@ function updateFaultComparisonChart(resData) {
         faultComparisonChart.data.datasets.push(newDataset);
       }
 
-      faultComparisonChart.data.labels = [document.getElementById('faultsFrameSize').value];
+      faultComparisonChart.data.labels = ['Frames: ' + document.getElementById('faultsFrameSize').value];
       faultComparisonChart.update();
       faultComparisonCanvas.style.display = 'block';
 }
@@ -133,7 +133,7 @@ function updateFaultRangeComparisonChart(resData) {
     resData[key].forEach((item) => {
       data.push(item.Faults);
       if (i === 0){
-        labels.push(item.Frames);
+        labels.push('Frames: ' + item.Frames);
       }
     })
 
@@ -151,8 +151,8 @@ function updateFaultRangeComparisonChart(resData) {
     };
 
     faultRangeComparisonChart.data.datasets.push(newDataset);
+    data = [];
   }
-
   faultRangeComparisonChart.data.labels = labels;
   faultRangeComparisonChart.update();
   faultRangeComparisonCanvas.style.display = 'block';
