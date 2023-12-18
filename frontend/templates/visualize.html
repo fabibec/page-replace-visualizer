@@ -83,7 +83,8 @@
               </div>
             </form>
           <div class="divider text-center" data-content="Chart"></div>
-          <p id="faultsReturn">Nothing.</p>
+
+          <canvas id="faultComparisonCanvas"></canvas>  
         </div>
         <div class="card-body ">
         </div>
@@ -96,19 +97,19 @@
             <form id="faultRangeForm">
               <div class="form-group">
                 <label class="form-checkbox form-inline">
-                  <input type="checkbox"><i class="form-icon" onClick="toggleAllCheckboxes(this, 'faults')"></i>Select All
+                  <input type="checkbox" onClick="toggleAllCheckboxes(this, 'faultsRange');"><i class="form-icon" ></i>Select All
                 </label>
                 <label class="form-checkbox form-inline">
-                  <input type="checkbox" name="faults" checked=""><i class="form-icon"></i>FIFO
+                  <input type="checkbox" name="faultsRange" checked=""><i class="form-icon"></i>FIFO
                 </label>
                 <label class="form-checkbox form-inline">
-                  <input type="checkbox" name="faults" checked=""><i class="form-icon"></i>SC
+                  <input type="checkbox" name="faultsRange" checked=""><i class="form-icon"></i>SC
                 </label>
                 <label class="form-checkbox form-inline">
-                  <input type="checkbox" name="faults"><i class="form-icon"></i>LRU
+                  <input type="checkbox" name="faultsRange" checked=""><i class="form-icon"></i>LRU
                 </label>
                 <label class="form-checkbox form-inline">
-                  <input type="checkbox" name="faults"><i class="form-icon"></i>OPT
+                  <input type="checkbox" name="faultsRange" checked=""><i class="form-icon"></i>OPT
                 </label>
                 <button class="btn form-inline float-right" id="faultsRangeCompareBtn">Compare</button>
               </div>

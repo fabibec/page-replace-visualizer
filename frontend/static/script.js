@@ -4,6 +4,42 @@ const faultForm = document.getElementById('faultForm');
 const faultRangeForm = document.getElementById('faultRangeForm');
 const memoryViewForm = document.getElementById('memoryViewForm');
 
+const chartBackgroundColors = [
+    'rgba(255, 99, 132, 0.2)', // red
+    'rgba(255, 159, 64, 0.2)', // orange
+    'rgba(255, 205, 86, 0.2)', // yellow
+    'rgba(75, 192, 192, 0.2)', // green
+    // 'rgb(54, 162, 235, 0.2)', // blue
+    // 'rgb(153, 102, 255, 0.2)', // purple
+    // 'rgb(201, 203, 207, 0.2)' // grey
+
+];
+const chartBorderColors = [
+    'rgb(255, 99, 132)', // red
+    'rgb(255, 159, 64)', // orange
+    'rgb(255, 205, 86)', // yellow
+    'rgb(75, 192, 192)', // green
+    // 'rgb(54, 162, 235)', // blue
+    // 'rgb(153, 102, 255)', // purple
+    // 'rgb(201, 203, 207)' // grey
+ ];
+const fifoColor = {
+    backgroundColor: chartBackgroundColors[0],
+    borderColor: chartBorderColors[0]
+};
+const scColor = {
+    backgroundColor: chartBackgroundColors[1],
+    borderColor: chartBorderColors[1]
+};
+const lruColor = {
+    backgroundColor: chartBackgroundColors[2],
+    borderColor: chartBorderColors[2]
+};
+const optColor = {
+    backgroundColor: chartBackgroundColors[3],
+    borderColor: chartBorderColors[3]
+};
+
 // Updating RefString Slider
 function updateSliderValue(sliderID, valueID){
   let length = document.getElementById(sliderID).valueAsNumber;
@@ -14,17 +50,15 @@ updateSliderValue('faultsFrameSize', 'FrameSizeValue');
 updateSliderValue('memoryFrameSize', 'memoryFrameSizeValue');
 
 
-// Select all checkboxes -not working as of now
 function toggleAllCheckboxes(source, destName) {
-    checkboxes = document.getElementsByName(destName);
-    for(var checkbox in checkboxes)
-      checkbox.checked = source.checked;
+    for (i = 0; i < document.getElementsByName(destName).length; i++)
+        document.getElementsByName(destName)[i].checked = source.checked;
 }
 
 // RefString form validation
 refStringForm.addEventListener('submit', async event => {
     event.preventDefault();
-  
+
     let length = document.getElementById('refStrSize').value;
     let locality = document.getElementById('localityTggl').checked;
     let input = document.getElementById('refStrInpt');
@@ -41,7 +75,7 @@ refStringForm.addEventListener('submit', async event => {
     }
 
     button.classList.toggle('loading');
-  
+
 });
 
 function createTableHeader(key) {
@@ -51,7 +85,7 @@ function createTableHeader(key) {
 }
 
 function createMemoryTableObj(htmlTableObj, memoryTableObj, algorithm) {
-  
+
   for (const [key, v] of Object.entries(memoryTableObj[0].MemoryView)) {
     tr = document.createElement('tr');
     // Header
@@ -68,17 +102,17 @@ function createMemoryTableObj(htmlTableObj, memoryTableObj, algorithm) {
           td.appendChild(document.createTextNode(item.MemoryView[key]));
         }
         tr.appendChild(td);
-      } 
+      }
     });
     htmlTableObj.appendChild(tr);
-  }     
+  }
 }
 
 // Memory View form validation
 memoryViewForm.addEventListener('submit', async event => {
     event.preventDefault();
     let selectVal = document.getElementById('algorithmSelect').value;
-    let AlgorithmVals = new Array(4).fill(false); 
+    let AlgorithmVals = new Array(4).fill(false);
 
     switch(selectVal) {
       case 'FIFO':
@@ -95,19 +129,19 @@ memoryViewForm.addEventListener('submit', async event => {
         break;
       default:
         AlgorithmVals[0] = true;
-    } 
+    }
 
     let refString = btoa(document.getElementById('refStrInpt').value);
     let frames = document.getElementById('memoryFrameSize').value;
     let button = document.getElementById('memoryViewBtn');
-    
+
     button.classList.toggle('loading');
 
     try {
-        const res = 
+        const res =
             await fetch(
                 api + 'faults/memory?referenceString=' + refString
-                + '&frames=' + frames 
+                + '&frames=' + frames
                 + '&FIFO=' + AlgorithmVals[0]
                 + '&SC=' + AlgorithmVals[1]
                 + '&LRU=' + AlgorithmVals[2]
@@ -115,15 +149,13 @@ memoryViewForm.addEventListener('submit', async event => {
                 + '&base64=' + true);
         const resData = await res.json();
 
-        console.log(resData);
-
         // Create Table Element
         let table = document.createElement('table');
         table.classList.add('table', 'table-scroll');
 
         // Iterate over MemoryFrame every key in MeomoryFrame list
         for (const [key, v] of Object.entries(resData.MemoryTable[0])) {
-          
+
           // The left column always contains the name
           switch(key) {
             case ('MemoryView'):
@@ -144,7 +176,7 @@ memoryViewForm.addEventListener('submit', async event => {
                   if (item[key]) {
                     icon = document.createElement('i');
                     icon.classList.add('icon', 'icon-cross');
-                    td.appendChild(icon);  
+                    td.appendChild(icon);
                   } else {
                     td.appendChild(document.createTextNode("\u00b7"))
                   }
@@ -155,7 +187,7 @@ memoryViewForm.addEventListener('submit', async event => {
                   td.appendChild(document.createTextNode(item[key]));
                   tr.appendChild(td);
               };
-            }       
+            }
           );
 
           table.appendChild(tr)
@@ -183,21 +215,22 @@ faultForm.addEventListener('submit', async event => {
   let refString = btoa(document.getElementById('refStrInpt').value);
   let frames = document.getElementById('faultsFrameSize').value;
   let button = document.getElementById('faultsCompareBtn');
-  
+
   button.classList.toggle('loading');
 
   try {
-      const res = 
+      const res =
           await fetch(
               api + 'faults/compare?referenceString=' + refString
-              + '&frames=' + frames 
+              + '&frames=' + frames
               + '&FIFO=' + fifo
               + '&SC=' + sc
               + '&LRU=' + lru
               + '&OPT=' + opt
               + '&base64=' + true);
       const resData = await res.json();
-      document.getElementById('faultsReturn').innerHTML = resData;
+      updateFaultComparisonChart(resData);
+
   } catch (err) {
       console.log(err.message);
   }
@@ -206,17 +239,55 @@ faultForm.addEventListener('submit', async event => {
 
 });
 
-// Chart js test
-const ctx = document.getElementById('myChart');
+function updateFaultComparisonChart(resData) {
+      const labels = [];
+      const data = [];
+      const backgroundColor = [];
+      const borderColor = [];
+      for (key in resData) {
+        labels.push(key);
+        data.push(resData[key]);
+        const color = getColorForAlgorithm(key);
+        backgroundColor.push(color.backgroundColor);
+        borderColor.push(color.borderColor);
+      }
+      faultComparisonChart.data.labels = labels;
+      faultComparisonChart.data.datasets[0].data = data;
+      faultComparisonChart.data.datasets[0].backgroundColor = backgroundColor;
+      faultComparisonChart.data.datasets[0].borderColor = borderColor;
+      faultComparisonChart.update();
+      faultComparisonCanvas.style.display = 'block';
+}
 
-  new Chart(ctx, {
+function getColorForAlgorithm(algorithm) {
+  switch(algorithm) {
+    case ('FIFO'):
+      return fifoColor;
+    case ('SC'):
+      return scColor;
+    case ('LRU'):
+      return lruColor;
+    case ('OPT'):
+      return optColor;
+    default:
+      return fifoColor;
+  }
+}
+
+const faultComparisonCanvas = document.getElementById('faultComparisonCanvas');
+faultComparisonCanvas.style.display = 'none';
+
+let faultComparisonChart = new Chart(faultComparisonCanvas, {
     type: 'bar',
     data: {
-      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+      labels: [],
       datasets: [{
-        label: '# of Votes',
-        data: [12, 19, 3, 5, 2, 3],
-        borderWidth: 1
+        label: 'Page Faults',
+        data: [],
+        borderWidth: 2,
+        backgroundColor: [],
+        borderColor: [],
+        maxBarThickness: 250
       }]
     },
     options: {
