@@ -157,7 +157,7 @@ async function submitFaults(event) {
 /* Faults by Range Form */
 faultRangeForm.addEventListener('submit', async event => {submitFaultsRange(event)});
 
-function submitFaultsRange(event) {
+async function submitFaultsRange(event) {
   event.preventDefault();
 
   let refString = refStrInpt.value;
@@ -176,6 +176,7 @@ function submitFaultsRange(event) {
     let minFrames = faultsRangeMinVal.value;
     let maxFrames = faultsRangeMaxVal.value;
     let msg = document.getElementById('faultsRangeMsg');
+    let button = document.getElementById('faultsRangeCompareBtn');
     refString = btoa(refString);
 
     if (!(opt || fifo || sc || lru)){

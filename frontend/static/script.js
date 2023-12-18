@@ -18,8 +18,6 @@ function updateSliderValue(sliderID, valueID){
   document.getElementById(valueID).innerHTML = '<b>' + length + '</b>';
 }
 
-<<<<<<< HEAD
-// Test
 function noEnter() {
   return !(window.event && window.event.keyCode == 13);
 }

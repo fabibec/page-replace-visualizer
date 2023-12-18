@@ -168,7 +168,7 @@ type: 'bar',
 data: {
     labels: [],
     datasets: []
-}
+},
 options: {
     scales: {
       y: {
