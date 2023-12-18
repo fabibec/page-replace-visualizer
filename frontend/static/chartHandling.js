@@ -35,23 +35,27 @@ const optColor = {
 };
 
 function updateFaultComparisonChart(resData) {
-    const labels = [];
-    const data = [];
-    const backgroundColor = [];
-    const borderColor = [];
-    for (key in resData) {
-      labels.push(key);
-      data.push(resData[key]);
-      const color = getColorForAlgorithm(key);
-      backgroundColor.push(color.backgroundColor);
-      borderColor.push(color.borderColor);
-    }
-    faultComparisonChart.data.labels = labels;
-    faultComparisonChart.data.datasets[0].data = data;
-    faultComparisonChart.data.datasets[0].backgroundColor = backgroundColor;
-    faultComparisonChart.data.datasets[0].borderColor = borderColor;
-    faultComparisonChart.update();
-    faultComparisonCanvas.style.display = 'block';
+      //reset chart
+      faultComparisonChart.data.datasets = [];
+
+      for (key in resData) {
+        const color = getColorForAlgorithm(key);
+
+        const newDataset = {
+          label: key,
+          data: [resData[key]],
+          backgroundColor: color.backgroundColor,
+          borderColor: color.borderColor,
+          borderWidth: 2,
+          maxBarThickness: 250
+        };
+
+        faultComparisonChart.data.datasets.push(newDataset);
+      }
+
+      faultComparisonChart.data.labels = [document.getElementById('faultsFrameSize').value];
+      faultComparisonChart.update();
+      faultComparisonCanvas.style.display = 'block';
 }
 
 function getColorForAlgorithm(algorithm) {
@@ -77,16 +81,95 @@ let faultComparisonChart = new Chart(faultComparisonCanvas, {
   type: 'bar',
   data: {
     labels: [],
-    datasets: [{
-      label: 'Page Faults',
-      data: [],
-      borderWidth: 2,
-      backgroundColor: [],
-      borderColor: [],
-      maxBarThickness: 250
-    }]
+    datasets: []
   },
   options: {
+    scales: {
+      y: {
+        ticks: {
+          color: "#3b4351",
+          beginAtZero: true,
+          stepSize: 1
+        },
+        grid: {
+          drawTicks: false,
+        },
+        border: {
+          dash: [5, 10],
+        },
+      },
+      x: {
+        ticks: {
+          color: "#3b4351",
+        },
+        grid: {
+          display: false,
+        },
+        border: {
+          display: false,
+        },
+      },
+    },
+    plugins: {
+        datalabels: {
+          color: 'blackS',
+          font: {
+            weight: 'bold'
+          }
+        }
+    }
+  }
+});
+
+function updateFaultRangeComparisonChart(resData) {
+  const labels = [];
+  let data = [];
+  let i = 0; //to detect first element --> duplicate labels
+
+  //reset chart
+  faultRangeComparisonChart.data.datasets = [];
+
+  for (key in resData) {
+    resData[key].forEach((item) => {
+      data.push(item.Faults);
+      if (i === 0){
+        labels.push(item.Frames);
+      }
+    })
+
+    i = 1;
+
+    const color = getColorForAlgorithm(key);
+
+    const newDataset = {
+      label: key,
+      data: data,
+      backgroundColor: color.backgroundColor,
+      borderColor: color.borderColor,
+      borderWidth: 2,
+      fill: false
+    };
+
+    faultRangeComparisonChart.data.datasets.push(newDataset);
+  }
+
+  faultRangeComparisonChart.data.labels = labels;
+  faultRangeComparisonChart.update();
+  faultRangeComparisonCanvas.style.display = 'block';
+}
+
+const faultRangeComparisonCanvas = document.getElementById('faultRangeComparisonCanvas');
+faultRangeComparisonCanvas.style.display = 'none';
+
+Chart.register(ChartDataLabels);
+
+let faultRangeComparisonChart = new Chart(faultRangeComparisonCanvas, {
+type: 'bar',
+data: {
+    labels: [],
+    datasets: []
+}
+options: {
     scales: {
       y: {
         ticks: {

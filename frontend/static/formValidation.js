@@ -123,7 +123,7 @@ async function submitFaults(event) {
     let opt = document.getElementById('faultsOptSlct').checked;
     let fifo = document.getElementById('faultsFifoSlct').checked;
     let sc = document.getElementById('faultsScSlct').checked;
-    let lru = document.getElementById('faultsLruSlct').checked; 
+    let lru = document.getElementById('faultsLruSlct').checked;
     let frames = document.getElementById('faultsFrameSize').value;
     let msg = document.getElementById('faultsMsg');
     refString = btoa(refString);
@@ -135,7 +135,7 @@ async function submitFaults(event) {
     };
 
     showSuccess(msg);
-    
+
     try {
         const res =
             await fetch(
@@ -148,7 +148,7 @@ async function submitFaults(event) {
                 + '&base64=' + true);
         const resData = await res.json();
         updateFaultComparisonChart(resData);
-    
+
     } catch (err) {
         console.log(err.message);
     }
@@ -172,7 +172,7 @@ function submitFaultsRange(event) {
     let opt = document.getElementById('faultsRangeOptSlct').checked;
     let fifo = document.getElementById('faultsRangeFifoSlct').checked;
     let sc = document.getElementById('faultsRangeScSlct').checked;
-    let lru = document.getElementById('faultsRangeLruSlct').checked; 
+    let lru = document.getElementById('faultsRangeLruSlct').checked;
     let minFrames = faultsRangeMinVal.value;
     let maxFrames = faultsRangeMaxVal.value;
     let msg = document.getElementById('faultsRangeMsg');
@@ -193,7 +193,31 @@ function submitFaultsRange(event) {
     }
 
     showSuccess(msg)
+    button.classList.toggle('loading');
 
+    try {
+      const res =
+          await fetch(
+              api + 'faults/compare/range?referenceString=' + refString
+              + '&minFrames=' + minFrames
+              + '&maxFrames=' + maxFrames
+              + '&FIFO=' + fifo
+              + '&SC=' + sc
+              + '&LRU=' + lru
+              + '&OPT=' + opt
+              + '&base64=' + true);
+      const resData = await res.json();
+
+      if(!res.ok){
+        console.log(res.statusText);
+      }else{
+        updateFaultRangeComparisonChart(resData);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+
+    button.classList.toggle('loading');
 
 }
 
@@ -336,7 +360,7 @@ function createMemoryTableObj(htmlTableObj, memoryTableObj, algorithm) {
             mdBit = document.createElement('sub');
             mdBit.appendChild(document.createTextNode('(' + item.ModifiedBits[key] +')'));
             td.appendChild(mdBit);
-          } 
+          }
         } else {
           if(item.MemoryView[key] == null) {
             td.appendChild(document.createTextNode("\u00b7"));

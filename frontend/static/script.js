@@ -18,15 +18,21 @@ function updateSliderValue(sliderID, valueID){
   document.getElementById(valueID).innerHTML = '<b>' + length + '</b>';
 }
 
+<<<<<<< HEAD
 // Test
 function noEnter() {
-  return !(window.event && window.event.keyCode == 13); 
+  return !(window.event && window.event.keyCode == 13);
 }
 
 function init(){
   updateSliderValue('refStrSize', 'refStrSizeValue');
   updateSliderValue('faultsFrameSize', 'FrameSizeValue');
   updateSliderValue('memoryFrameSize', 'memoryFrameSizeValue');
+}
+
+function toggleAllCheckboxes(source, destName) {
+    for (i = 0; i < document.getElementsByName(destName).length; i++)
+        document.getElementsByName(destName)[i].checked = source.checked;
 }
 
 init();
