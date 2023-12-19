@@ -43,3 +43,7 @@ body {
 .card-last {
   margin-bottom: 7rem;
 }
+
+.container {
+  padding-bottom: 2rem;
+}

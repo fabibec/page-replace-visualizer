@@ -10,27 +10,23 @@
         </div>
         <div class="card-body">
           <div class="divider text-center" data-content="Infos"></div>
+          The simplest page-replacement algorithm is a first-in, first-out (FIFO) algorithm.
           FIFO operates on the principle of evicting the oldest page in memory.
           It maintains a queue of pages and replaces the page that entered the
-          memory earliest.
+          memory earliest, if a new page needs to be brought in.
           <div class="divider text-center" data-content="Advantages & Detriments"></div>
           <div class="columns">
             <div class="column col-6">
               <p><b>Advantages</b></p>
               <ul>
+                <li>Easy to understand</li>
                 <li>Easy to implement</li>
-                <li></li>
-                <li></li>
-                <li></li>
               </ul>
             </div>
             <div class="column col-6">
               <p><b>Detriments</b></p>
               <ul>
-                <li>#TODO</li>
-                <li></li>
-                <li></li>
-                <li></li>
+                <li>performance is not always good (e.g. heavily used global variable in first page)</li>
               </ul>
             </div>
           </div>
@@ -42,27 +38,25 @@
         </div>
         <div class="card-body">
           <div class="divider text-center" data-content="Infos"></div>
-          Second Chance, a variation of FIFO, includes a reference bit to give
-          pages a "second chance" before eviction. If a page is referenced again
-          before eviction, it's moved to the end of the queue.
+          The underlying principle of the Second Chance algorithm is still FIFO replacement.
+          When a page is selected for eviction however, the Reference Bit is inspected. 
+          The Reference Bit is a bit for a page that is set to 1 by the hardware whenever a page is referenced.
+          If the value is 0 the page gets replaced, when the value is 1 on the other side, 
+          the page receives a "second chance". Its Reference Bit gets cleared and the next page will be evaluated.
           <div class="divider text-center" data-content="Advantages & Detriments"></div>
           <div class="columns">
             <div class="column col-6">
               <p><b>Advantages</b></p>
               <ul>
-                <li>#TODO</li>
-                <li></li>
-                <li></li>
-                <li></li>
+                <li>better performance than FIFO</li>
+                <li>easier to implement than LRU</li>
               </ul>
             </div>
             <div class="column col-6">
               <p><b>Detriments</b></p>
               <ul>
-                <li>#TODO</li>
-                <li></li>
-                <li></li>
-                <li></li>
+                <li>degenerates to FIFO replacement if all bits are set</li>
+                <li>requires hardware assistance in the form of reference bits</li>
               </ul>
             </div>
           </div>
@@ -74,27 +68,24 @@
         </div>
         <div class="card-body">
           <div class="divider text-center" data-content="Infos"></div>
+          Least Recently Used Algorithm is an approach to imitate the Optimal Algorithm without relying on information for the future.
           LRU replaces the least recently used page. It relies on the principle
-          that pages used in the recent past are less likely to be used soon,
+          that pages used in the past are less likely to be used again soon,
           making them candidates for replacement.
           <div class="divider text-center" data-content="Advantages & Detriments"></div>
           <div class="columns">
             <div class="column col-6">
               <p><b>Advantages</b></p>
               <ul>
-                <li>#TODO</li>
-                <li></li>
-                <li></li>
-                <li></li>
+                <li>good performance</li>
+                <li>can be implemented on real hardware</li>
               </ul>
             </div>
             <div class="column col-6">
               <p><b>Detriments</b></p>
               <ul>
-                <li>#TODO</li>
-                <li></li>
-                <li></li>
-                <li></li>
+                <li>harder to implement</li>
+                <li>keeping track of page usages requires computational afford or hardware assistance</li>
               </ul>
             </div>
           </div>
@@ -106,27 +97,23 @@
         </div>
         <div class="card-body">
           <div class="divider text-center" data-content="Infos"></div>
-          OPT, an idealistic algorithm, removes the page that won't be used for
+          OPT or MIN, an idealistic algorithm, removes the page that won't be used for
           the longest duration in the future. It assumes perfect knowledge of
-          future references, making it a benchmark for comparison.
+          future references, making it a benchmark for comparison, since it causes the lowest possible number of page faults.
           <div class="divider text-center" data-content="Advantages & Detriments"></div>
           <div class="columns">
             <div class="column col-6">
               <p><b>Advantages</b></p>
               <ul>
-                <li>#TODO</li>
-                <li></li>
-                <li></li>
-                <li></li>
+                <li>easy to understand</li>
+                <li>best performance (least page faults)</li>
+                <li>benchmark for other algorithms</li>
               </ul>
             </div>
             <div class="column col-6">
               <p><b>Detriments</b></p>
               <ul>
-                <li>#TODO</li>
-                <li></li>
-                <li></li>
-                <li></li>
+                <li>impossible to implement on real system (would require knowledge of the future)</li>
               </ul>
             </div>
           </div>
