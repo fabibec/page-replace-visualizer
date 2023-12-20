@@ -1,0 +1,11 @@
+'''
+Constants
+'''
+# Reference String Limits
+REF_STRING_MAX_VALUE = 30;
+REF_STRING_DEFAULT_VALUE = 15;
+REF_STRING_MIN_VALUE = 1;
+# Frames Limit
+FRAMES_MAX_VALUE = 12;
+FRAMES_DEFAULT_VALUE = 4;
+FRAMES_MIN_VALUE = 2;

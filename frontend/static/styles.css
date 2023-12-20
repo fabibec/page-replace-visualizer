@@ -1,0 +1,49 @@
+body { 
+  padding-top: 5.5rem;
+}
+
+.seperator {
+  height: 2px;
+  border-width: 0;
+  color: #3b4351;
+  background-color: #3b4351;
+}
+
+.navbar {
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  background-color: #f6f6f6;
+  padding: 1rem;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width:100%;
+  z-index: 100;
+  
+  .navbar-brand {
+    font-size: 1.5rem;
+  }
+}
+
+.landing-text-container, .empty,  .card {
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+}
+
+.landing-text-col, .error-text-col {
+  margin-top: 4%;
+}
+
+.card-scroll {
+  margin-bottom: 2rem;
+}
+
+.algorithm {
+  margin-bottom: 2rem;
+}
+
+.card-last {
+  margin-bottom: 7rem;
+}
+
+.container {
+  padding-bottom: 2rem;
+}
