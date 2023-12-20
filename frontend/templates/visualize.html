@@ -25,7 +25,7 @@
              <!-- Prevent implicit submission of the form -->
             <button type="submit" disabled style="display: none" aria-hidden="true"></button>
             <div class="form-group">
-              <label class="form-label form-inline float-left" for="refStrSize">Length:</label>
+              <label class="form-label form-inline float-left" for="refStrSize">Frames:</label>
               <label class="form-label form-inline float-right" id="refStrSizeValue" for="refStrSize">10</label>
               <input class="slider tooltip" type="range" min="4" max="30" value="10" oninput="this.setAttribute('value', this.value);updateSliderValue('refStrSize', 'refStrSizeValue');" id="refStrSize">
             </div>
@@ -58,7 +58,7 @@
     <!--Scrollable Content-->
     <div class="column col-8 col-scroll">
       <!--Compare Faults-->
-      <div class="card card-scroll">
+      <div class="card card-scroll scroll-hidden">
         <div class="card-header">
           <div class="card-title h3">Compare Faults</div>
           <div class="divider text-center" data-content="Settings"></div>
@@ -79,7 +79,6 @@
                 <label class="form-checkbox form-inline">
                   <input type="checkbox" name="faults" id="faultsOptSlct"><i class="form-icon"></i>OPT
                 </label>
-                <button class="btn form-inline float-right" id="faultsCompareBtn">Compare</button>
                 <p class="form-input-hint" id="faultsMsg"></p>
               </div>
               <div class="form-group">
@@ -88,14 +87,14 @@
                 <input class="slider tooltip" type="range" min="2" max="12" value="6" oninput="this.setAttribute('value', this.value);updateSliderValue('faultsFrameSize', 'FrameSizeValue');" id="faultsFrameSize">
               </div>
             </form>
-          <div class="divider text-center" data-content="Chart"></div>
+          <div class="divider text-center" data-content="Chart" id="faultComparisonDivider"></div>
             <canvas id="faultComparisonCanvas"></canvas>  
           </div>
         <div class="card-body ">
         </div>
       </div>
       <!--Compare Faults Range-->
-      <div class="card card-scroll">
+      <div class="card card-scroll scroll-hidden">
         <div class="card-header">
           <div class="card-title h3">Compare Faults over Range</div>
           <div class="divider text-center" data-content="Settings"></div>
@@ -116,35 +115,32 @@
                 <label class="form-checkbox form-inline">
                   <input type="checkbox" name="faultsRange" id="faultsRangeOptSlct"><i class="form-icon"></i>OPT
                 </label>
-                <button class="btn form-inline float-right" id="faultsRangeCompareBtn">Compare</button>
                 <p class="form-input-hint" id="faultsRangeMsg"></p>
               </div>
-              <div class="form-group">
+              <div class="form-group" id="formGroupRange">
                 <label class="form-label">Range:</label>
                 <div class="input-group">
                   <input class="form-input" id="faultsRangeMinVal" min=2 max=11 value=5 type="number">
                   <input class="form-input" id="faultsRangeMaxVal" min=3 max=12 value=10 type="number">
                 </div>
                 <p class="form-input-hint" id="faultsFrameRangeMsg"></p>
-              </div> 
+              </div>
             </form>
-          <div class="divider text-center" data-content="Chart"></div>
-
-          <canvas id="faultRangeComparisonCanvas"></canvas>  
-        </div> 
+            <div class="divider text-center" data-content="Chart" id="faultRangeComparisonDivider"></div>
+              <canvas id="faultRangeComparisonCanvas"></canvas>  
+            </div> 
         <div class="card-body">
           <!--canvas id="faultRangeComparisonCanvas"></canvas-->  
         </div> 
       </div>
       <!--Memory View-->
-      <div class="card card-last">
+      <div class="card card-last scroll-hidden">
         <div class="card-header">
           <div class="card-title h3">Memory view</div>
           <div class="divider text-center" data-content="Settings"></div>
           <form id="memoryViewForm">
             <div class="form-group">
               <label class="form-label form-inline float-left" for="algorithmSelect">Algorithm:</label>
-              <button class="btn form-inline float-right" id="memoryViewBtn">Get Details</button>
               <select class="form-select" id="algorithmSelect">
                 <option value="FIFO">FIFO</option>
                 <option value="SC">SC</option>
@@ -158,11 +154,11 @@
               <input class="slider tooltip" type="range" min="2" max="12" value="6" oninput="this.setAttribute('value', this.value);updateSliderValue('memoryFrameSize', 'memoryFrameSizeValue');" id="memoryFrameSize">
             </div> 
           </form>       
-          <div class="divider text-center" data-content="Table"></div>
+          <div class="divider text-center" data-content="Table" id="memoryTableDivider"></div>
           <div id="memoryTable"></div>
-          </div>
         </div>
       </div>
+    </div>
 
     </div>
   </div>
