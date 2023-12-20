@@ -79,6 +79,12 @@ async function validateReferenceString(event) {
   let refString = document.getElementById('refStrInpt').value;
   if(isEmpty(refString) || !isRefStringValid(refString)){
       showError(refStrInpt, 'Please provide or generate a valid reference string.');
+      document.getElementById('faultComparisonDivider').style.display = 'none';
+      document.getElementById('faultComparisonCanvas').style.display = 'none';
+      document.getElementById('faultRangeComparisonDivider').style.display = 'none';
+      document.getElementById('faultRangeComparisonCanvas').style.display = 'none';
+      document.getElementById('memoryTableDivider').style.display = 'none';
+      document.getElementById('memoryTable').style.display = 'none';
       return;
   } else {
       showSuccess(refStrInpt);
@@ -173,22 +179,6 @@ async function submitFaults(event) {
 
 /* Faults by Range Form */
 document.querySelector('#faultRangeForm').addEventListener('input', debounce((event) => submitFaultsRange(event)));
-///eventList.forEach(e => faultsRangeMinVal.addEventListener(e, debounce((event) => validateRange(event, faultsRangeMinVal.value, faultsRangeMaxVal.value))));
-//eventList.forEach(e => faultsRangeMaxVal.addEventListener(e, debounce((event) => validateRange(event, faultsRangeMinVal.value, faultsRangeMaxVal.value))));
-
-/*
-async function validateRange(event, minFrames, maxFrames) {
-  let msg = document.getElementById('faultsFrameRangeMsg');
-  if(!isRangeValid(minFrames, maxFrames)){
-    showError(msg, 'Please provide a valid range between 2 and 12.');
-    //Hide the chart
-    document.getElementById('faultRangeComparisonDivider').style.display = 'none';
-    document.getElementById('faultRangeComparisonCanvas').style.display = 'none';
-    return;
-  }
-  showSuccess(msg);
-  submitFaultsRange(event);
-}*/
 
 faultRangeForm.addEventListener('submit', async event => {submitFaultsRange(event)});
 
