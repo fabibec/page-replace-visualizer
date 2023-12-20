@@ -189,8 +189,6 @@ def sc(frames : int, referenceString : list[str], memoryView = False) -> int | F
                 ModifiedBits = refBitList)
             memTable.append(f)
 
-        print(f"Frames {frameList} | Modified Bit {refBitList} | Page Faults {pageFaults} | isPageFault {isPageFault} | Page {page} | PointerPos {ptr}")
-
     return pageFaults if not memoryView \
         else FaultsMemoryView(PageReplaceAlgorithm = PRAlgorithm.SC, MemoryTable = memTable)
 
