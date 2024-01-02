@@ -360,7 +360,6 @@ async function submitMemoryView(event) {
 
           table.appendChild(tr)
         }
-        localStorage.setItem('memTable', table);
         table.style.width = '100%';
         tableInsert = document.getElementById('memoryTable');
         tableInsert.replaceChildren(table);
