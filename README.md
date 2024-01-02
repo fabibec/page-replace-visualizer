@@ -38,7 +38,7 @@ If you want to avoid typing the long docker run command over and over again just
 Grab the file using the wget command
 
 ```shell
-wget https://raw.githubusercontent.com/fabibec/page-replace-visualizer/dynamic-submit/build/compose/docker-compose.yml
+wget https://raw.githubusercontent.com/fabibec/page-replace-visualizer/dev/build/local/compose/docker-compose.yml
 ```
 
 Then execute by running the docker compose command
