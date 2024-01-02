@@ -76,7 +76,7 @@ async def not_found_exception_handler(request: Request, exc: HTTPException):
 '''
 This section handles the Backend Endpoints
 '''
-@app.get("/api/refString/", tags=["referenceString"], response_model=ReferenceString)
+@app.get("/api/refString", tags=["referenceString"], response_model=ReferenceString)
 async def generate_Reference_String(
         length: Annotated[int, Query(title="The length of the Reference String", \
                                     ge=c.REF_STRING_MIN_VALUE, le=c.REF_STRING_MAX_VALUE)] = c.REF_STRING_DEFAULT_VALUE,
