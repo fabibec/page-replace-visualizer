@@ -15,6 +15,8 @@ body {
 /* card styling */
 .empty, .card {
   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  border: .05rem solid #dadee4;
+  background: #fff;
 }
 
 /* grid container */
@@ -37,10 +39,20 @@ body {
   padding: calc(2px + 1.2625vw);
 }
 
-.landing-text {
+.landing-text, .error-text{
   margin: calc(20px + 1.2625vw);
 }
 
 .algorithm:not(:last-child) {
   margin-bottom: 2rem;
 }
+
+.home-footer {
+  transform: rotate(180deg);
+  p {
+    transform: rotate(180deg);
+    text-align: right;
+    margin: 0;
+  }
+}
+

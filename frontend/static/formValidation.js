@@ -50,7 +50,7 @@ const debounce = (fn, delay = 600) => {
 };
 
 const isRefStringValid = (refStr) => {
-  const re = /^[\w\s]+(,[\w\s]+){3,29}$/;
+  const re = /^[\w\s]+(,[\w\s]+){3,49}$/;
   return re.test(refStr);
 };
 
@@ -361,6 +361,7 @@ async function submitMemoryView(event) {
           table.appendChild(tr)
         }
         localStorage.setItem('memTable', table);
+        table.style.width = '100%';
         tableInsert = document.getElementById('memoryTable');
         tableInsert.replaceChildren(table);
     } catch (err) {
