@@ -1,6 +1,8 @@
 body {
     margin: 0; /* prevents scrollbars */
     overflow-y: hidden;
+    touch-action: none;
+    -ms-touch-action: none;
     background: #f7f7f7;
 }
 

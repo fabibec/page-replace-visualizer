@@ -1,6 +1,12 @@
+html{
+  overscroll-behavior: none;
+}
+
 body { 
   background: #f7f7f7;
   overflow-y: hidden;
+  touch-action: none;
+  -ms-touch-action: none;
 }
 
 .navbar {
@@ -30,12 +36,12 @@ body {
 }
 
 .page-layout > .header {
-  grid-area:header;
+  grid-area: header;
   z-index: 1;
 }
 .page-layout > .main-content {
-  grid-area:main-content;
-  overflow-y: auto;
+  grid-area: main-content;
+  overflow-y: scroll;
   padding: calc(2px + 1.2625vw);
 }
 
@@ -47,12 +53,7 @@ body {
   margin-bottom: 2rem;
 }
 
-.home-footer {
-  transform: rotate(180deg);
-  p {
-    transform: rotate(180deg);
-    text-align: right;
-    margin: 0;
-  }
+.footer-text {
+  text-align: center;
 }
 
