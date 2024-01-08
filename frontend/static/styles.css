@@ -53,10 +53,7 @@ body {
   margin-bottom: 2rem;
 }
 
-.home-footer {
-  p {
-    text-align: right;
-    margin: 0;
-  }
+.footer-text {
+  text-align: center;
 }
 
