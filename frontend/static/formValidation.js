@@ -50,7 +50,7 @@ const debounce = (fn, delay = 500) => {
 };
 
 const isRefStringValid = (refStr) => {
-  const re = /^[\w\s]+(,[\w\s]+){3,29}$/;
+  const re = /^[\s]?[\w]{1,10}[\s]?(,[\s]?[\w]{1,10}[\s]?){3,49}$/;
   return re.test(refStr);
 };
 
