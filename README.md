@@ -1,50 +1,70 @@
-**Projektbeschreibung: Page/Frame Replacement Web-Applikation**
+# Page Replacement Visualizer
 
-**Ziel**
-Entwicklung einer benutzerfreundlichen Web-Applikation zur Analyse von Page/Frame Replacement Algorithmen (OPT, LRU, FIFO, Second Chance). Die Anwendung erlaubt die Eingabe eines Referenzstrings sowie der Anzahl verfügbarer Frames und zeigt die resultierenden Page Faults in einem Diagramm, wahlweise als Linien- oder Balkendiagramm, an.
+Get a better understanding of page replacement algorithms through interactive visualization.
 
-**Technologien:**
-- Programmiersprache: Python
-- Framework: FastAPI oder Flask (Entscheidung steht noch aus)
-- Diagramme: Linien- und Balkendiagramme (wählbar)
-- Diagramm-Bibliothek: Plotly oder chart.js (Entscheidung noch offen)
-- Hosting der Webseite via Netcup
+This is the final project of our operating system course.
 
-**Funktionalitäten:** 
-1. **Eingabe des Referenzstring:**.
-   - Benutzer kann Referenzstring manuell eingeben
-   - Möglichkeit zur zufälligen Generierung eines Referenzstrings.
+## Getting Started
 
-2. **Algorithmus-Auswahl:**.
-   - OPT, LRU, FIFO, Second Chance.
+These instructions will give you a copy of the project up and running on your local machine.
 
-3. **Anpassbare Frame-Anzahl:**.
-   - Eingabe der verfügbaren Frames.
+### Prerequisites
 
-4. **Diagramm-Anzeige:**.
-   - Auswahl zwischen Linien- und Balkendiagramm.
-   - X-Achse: Anzahl der verfügbaren Frames.
-   - Y-Achse: Page Faults.
+The website is provided as a docker image hence you need:
+- [docker](https://docs.docker.com/compose/install/)
 
-5. **Benutzerfreundliche Oberfläche:**.
-   - Minimalistisches und intuitives Design.
-   - Unterstützung für PC und Tablet (mobile Unterstützung optional).
+### Installing
 
-6. **Dokumentation:**.
-   - Klare Anleitung zur Benutzung der Webanwendung.
-   - Dokumentation der Implementierung der Algorithmen.
+#### Docker Setup
 
-7. **Teamarbeit:**.
-   - Das Projekt wird von einem dreiköpfigen Team bearbeitet.
+First pull the docker image using:
 
-**Implementierung:**
-- Implementierung der Page/Frame Replacement Algorithmen in Python.
-- Verwendung von FastAPI oder Flask für das Backend.
-- Implementierung eines übersichtlichen und einfachen Frontends.
+```shell
+docker pull ghcr.io/fabibec/page-replace-visualizer-local:latest
+```
 
-**Zeit- und Ressourcenplanung:**.
-- Wird über die Github-Projektfunktionalität verwaltet.
+Then spin up the container using:
 
-**Fertigstellung:**.
-- Kurze Präsentation der Web-Applikation.
-- Bereitstellung der Dokumentation und der Webadresse zur späteren Referenz.
+```shell
+docker run -d -p <your-port>:8080 ghcr.io/fabibec/page-replace-visualizer-local:latest
+```
+
+Now you have an instance of the website running on localhost:\<your-port>
+
+##### Docker Compose Setup
+
+If you want to avoid typing the long docker run command over and over again just use our Docker Compose file:
+
+Grab the file using the wget command
+
+```shell
+wget https://raw.githubusercontent.com/fabibec/page-replace-visualizer/main/build/compose/docker-compose.yml
+```
+
+Then execute by running the docker compose command
+
+```shell
+docker compose up -d
+```
+
+## Built With
+
+  - [FastAPI](https://github.com/tiangolo/fastapi) - FastAPI is a modern, fast (high-performance), web framework for building APIs with Python.
+  - [Jinja](https://github.com/pallets/jinja) - A very fast and expressive template engine. 
+  - [Spectre.css](https://github.com/picturepan2/spectre) - Spectre.css - A Lightweight, Responsive and Modern CSS Framework. 
+  - [Chart.js](https://github.com/chartjs/Chart.js) - Simple yet flexible JavaScript charting for designers & developers   
+  - [Gunicorn](https://github.com/benoitc/gunicorn) - Gunicorn 'Green Unicorn' is a WSGI HTTP Server for UNIX, fast clients and sleepy applications. 
+  - [Uvicorn](https://github.com/encode/uvicorn) - Uvicorn is an ASGI web server implementation for Python.
+
+## Authors
+
+  - **Fabian Becker**
+    [fabibec](https://github.com/fabibec)
+  - **Florian Remberger**
+    [masterYoda8](https://github.com/masterYoda8)
+  - **Michael Specht**
+    [xgsngxguy](https://github.com/xgsngxguy)
+
+## License
+
+This project is licensed under the [MIT License](LICENSE)

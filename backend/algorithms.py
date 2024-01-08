@@ -24,7 +24,13 @@ def refStringGen(length, localityMode):
         for _ in range(length):
             referenceString += str(random.randint(0, N)) + ','
 
-    return referenceString[:-1]
+    # Normalizing Reference String
+    baseString = referenceString[:-1].split(',')
+    indexList = []
+    for letter in baseString:
+        if letter not in indexList:
+            indexList.append(letter)
+    return ','.join([str(indexList.index(letter) + 1) for letter in baseString])
 
 
 def fifo(frames : int, referenceString : list[str], memoryView = False) -> int | FaultsMemoryView :
@@ -189,38 +195,6 @@ def sc(frames : int, referenceString : list[str], memoryView = False) -> int | F
                 ModifiedBits = refBitList)
             memTable.append(f)
 
-        print(f"Frames {frameList} | Modified Bit {refBitList} | Page Faults {pageFaults} | isPageFault {isPageFault} | Page {page} | PointerPos {ptr}")
-
     return pageFaults if not memoryView \
         else FaultsMemoryView(PageReplaceAlgorithm = PRAlgorithm.SC, MemoryTable = memTable)
-
-
-def sc_test():
-    refStr1Num = [0, 4, 1, 4, 2, 4, 3, 4, 2, 4, 0, 4, 1, 4, 2, 4, 3, 4]
-    refStr1Frames = 3
-    refStr1Lst = [str(i) for i in refStr1Num]
-    refStr1Exp = 9
-
-    refStr2Frames = 4
-    refStr2Num = "2 5 10 1 2 2 6 9 1 2 10 2 6 1 2 1 6 9 5 1"
-    refStr2Lst = refStr2Num.split(' ')
-    refStr2Exp = 11
-
-    refStr3Frames = 3
-    refStr3Num = "2 5 10 1 2 2 6 9 1 2 10 2 6 1 2 1 6 9 5 1"
-    refStr3Lst = refStr3Num.split(' ')
-    refStr3Exp = 16
-
-    refStr1Ret = sc(refStr1Frames, refStr1Lst)
-    refStr2Ret = sc(refStr2Frames, refStr2Lst)
-    refStr3Ret = sc(refStr3Frames, refStr3Lst)
-
-
-    print(f"Test1: Expected {refStr1Exp}, Result {refStr1Ret} -> Passed {refStr1Exp == refStr1Ret}")
-    print(f"Test2: Expected {refStr2Exp}, Result {refStr2Ret} -> Passed {refStr2Exp == refStr2Ret}")
-    print(f"Test3: Expected {refStr3Exp}, Result {refStr3Ret} -> Passed {refStr3Exp == refStr3Ret}")
-
-
-if __name__ == '__main__':
-    sc_test()
 
