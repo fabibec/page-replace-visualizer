@@ -1,36 +1,37 @@
 {% extends "base.html" %}
 {% block title %}Page Replacement Visualizer{% endblock %}
 {% block content %}
-<main class="container">
-  <div class="columns">
-    <div class="column col-8 col-md-12 col-mx-auto landing-text-col">
-      <div class="empty landing-text-container">
-        <p class="empty-subtitle">
-        <b>Page replacement algorithms are essential in operating systems,
-        particularly in managing main memory efficiently.</b> <br> As systems encounter
-        memory shortages, these algorithms play a vital role in deciding which
-        pages should be swapped out from memory (page eviction) to accommodate
-        new ones (page allocation).<br> Visualizing these algorithms provides a
-        clearer understanding of their functionality and performance. This web
-        page serves as a visual aid to comprehend and compare popular <a href="{{ url_for('algorithms') }}">page replacement algorithms</a>
-        , namely:<br>
-        <ul>
-          <li>First-In-First-Out (<b>FIFO</b>)</li>
-          <li>Second Chance (<b>SC</b>)</li>
-          <li>Least Recently Used (<b>LRU</b>)</li>
-          <li>Optimal (<b>OPT</b>)</li>
-        </ul>
-        Through interactive Chart.js visualizations, this webpage illustrates
-        the number of page faults incurred by each algorithm under various
-        scenarios. Users can explore and compare the efficiency of these
-        algorithms in managing memory resources, gaining insights into their
-        strengths and limitations.  
-        </p>
-        <div class="empty-action">
-          <button class="btn btn-primary" onclick="window.location.href='{{ url_for('visualize') }}';">Try it!</button>
-        </div>
+<main class="main-content">
+  <div class="column col-10 col-md-12 col-mx-auto">
+    <div class="empty landing-text">
+      <p class="empty-subtitle">
+      <b>Page replacement algorithms are essential in operating systems,
+      particularly in managing main memory efficiently.</b> <br> As systems encounter
+      memory shortages, these algorithms play a vital role in deciding which
+      pages should be swapped out from memory (page eviction) to accommodate
+      new ones (page allocation).<br> Visualizing these algorithms provides a
+      clearer understanding of their functionality and performance. This web
+      page serves as a visual aid to comprehend and compare popular <a href="{{ url_for('algorithms') }}">page replacement algorithms</a>
+      , namely:<br>
+      <ul>
+        <li>First-In-First-Out (<b>FIFO</b>)</li>
+        <li>Second Chance (<b>SC</b>)</li>
+        <li>Least Recently Used (<b>LRU</b>)</li>
+        <li>Optimal (<b>OPT</b>)</li>
+      </ul>
+      Through interactive Chart.js visualizations, this webpage illustrates
+      the number of page faults incurred by each algorithm under various
+      scenarios. Users can explore and compare the efficiency of these
+      algorithms in managing memory resources, gaining insights into their
+      strengths and limitations.  
+      </p>
+      <div class="empty-action">
+        <button class="btn btn-primary" onclick="window.location.href='{{ url_for('visualize') }}';">Try it!</button>
       </div>
     </div>
+    <footer>
+      <p class="footer-text">Created by <strong>Fabian&nbsp;Becker</strong>, <strong>Florian&nbsp;Remberger</strong> & <strong>Michael&nbsp;Specht</strong></p>
+    </footer>
   </div>
 </main>
 {% endblock%}

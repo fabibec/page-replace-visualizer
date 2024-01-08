@@ -13,32 +13,34 @@
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="msapplication-config" content="{{ url_for('frontend', path='static/favicon/browserconfig.xml') }}">
     <meta name="theme-color" content="#ffffff">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, height=device-height">
     <link rel="stylesheet" href="{{ url_for('frontend', path='/spectre-css/dist/spectre.min.css') }}" />
     <link rel="stylesheet" href="{{ url_for('frontend', path='/spectre-css/dist/spectre-exp.min.css') }}" />
     <link rel="stylesheet" href="{{ url_for('frontend', path='/spectre-css/dist/spectre-icons.min.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('frontend', path='/static/styles.css') }}" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
-    {% block extraStylesheet %}{% endblock %}
+    {% block Stylesheet %}<link rel="stylesheet" href="{{ url_for('frontend', path='/static/styles.css') }}" />{% endblock %}
     <title>{% block title %}{% endblock %}</title>
   </head>
 
-  <body>
-    <header class="navbar mb-8">
-      <section class="navbar-section">
-        <a href="{{ url_for('algorithms') }}" class="btn btn-link">The Algorithms</a>
-        <a href="{{ url_for('visualize') }}" class="btn btn-link">Visualize</a>
-      </section>
-      <section class="navbar-center">
-        <!-- centered logo or brand -->
-        <a href="{{ url_for('home') }}" class="navbar-brand hero-lg"><b>Page replacement visualizer</b></a>
-      </section>
-      <section class="navbar-section">
-        <a href="{{ url_for('imprint') }}" class="btn btn-link">Imprint</a>
-        <a href="https://github.com/fabibec/page-replace-visualizer" class="btn btn-link">GitHub</a>
-      </section>
-    </header>
-    {% block content %} {% endblock %}
+  <body class="">
+    <div class="page-layout">
+      <header class="navbar mb-8 header">
+        <section class="navbar-section">
+          <a href="{{ url_for('algorithms') }}" class="btn btn-link">The Algorithms</a>
+          <a href="{{ url_for('visualize') }}" class="btn btn-link">Visualize</a>
+        </section>
+        <section class="navbar-center">
+          <!-- centered logo or brand -->
+          <a href="{{ url_for('home') }}" class="navbar-brand hero-lg"><b>Page replacement visualizer</b></a>
+        </section>
+        <section class="navbar-section">
+          <a href="{{ url_for('imprint') }}" class="btn btn-link">Imprint</a>
+          <a href="https://github.com/fabibec/page-replace-visualizer" class="btn btn-link">GitHub</a>
+        </section>
+      </header>
+      {% block content %} {% endblock %}
+    </div>
   </body>
 </html>
 

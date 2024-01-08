@@ -7,10 +7,10 @@ const faultRangeForm = document.getElementById('faultRangeForm');
 const memoryViewForm = document.getElementById('memoryViewForm');
 const faultsRangeMinVal = document.getElementById('faultsRangeMinVal');
 const faultsRangeMaxVal = document.getElementById('faultsRangeMaxVal');
-const eventList = ['input', 'keydown', 'paste', 'change'];
+const eventList = ['input', 'paste', 'change', 'keydown'];
 
 /* General Validation functions*/
-const showError = (input, message) => {
+const showError = (input, message = null) => {
     // get the form-field element
     const formField = input.parentElement;
     // add the error class
@@ -35,7 +35,7 @@ const showSuccess = (input) => {
     error.textContent = '';
 }
 
-const debounce = (fn, delay = 500) => {
+const debounce = (fn, delay = 600) => {
     let timeoutId;
     return (...args) => {
         // cancel the previous timer
@@ -73,15 +73,22 @@ refStringForm.addEventListener('submit', async event => {
 });
 
 // Validate Reference String input from user
-eventList.forEach(event => refStrInpt.addEventListener(event, debounce(() => validateReferenceString())));
+eventList.forEach(async event => refStrInpt.addEventListener(event, debounce((event) => validateReferenceString(event))));
 
-function validateReferenceString() {
+async function validateReferenceString(event) {
   let refString = document.getElementById('refStrInpt').value;
   if(isEmpty(refString) || !isRefStringValid(refString)){
       showError(refStrInpt, 'Please provide or generate a valid reference string.');
+      document.getElementById('faultComparisonDivider').style.display = 'none';
+      document.getElementById('faultComparisonCanvas').style.display = 'none';
+      document.getElementById('faultRangeComparisonDivider').style.display = 'none';
+      document.getElementById('faultRangeComparisonCanvas').style.display = 'none';
+      document.getElementById('memoryTableDivider').style.display = 'none';
+      document.getElementById('memoryTable').style.display = 'none';
       return;
   } else {
       showSuccess(refStrInpt);
+      submitVisualizerForms(event);
   }
 }
 
@@ -105,9 +112,17 @@ async function submitReferenceString(event) {
 
     button.classList.toggle('loading');
     showSuccess(refStrInpt);
+    await submitVisualizerForms(event);
+}
+
+async function submitVisualizerForms(event) {
+  submitFaults(event);
+  submitFaultsRange(event);
+  submitMemoryView(event);
 }
 
 /* Faults From */
+faultForm.addEventListener('input', debounce((event) => submitFaults(event, 300)));
 faultForm.addEventListener('submit', async event => {submitFaults(event)});
 
 async function submitFaults(event) {
@@ -118,6 +133,8 @@ async function submitFaults(event) {
     // validate Ref String
     if(!isRefStringValid(refString) || isEmpty(refString)){
         showError(refStrInpt, 'Please provide or generate a valid reference string.');
+        document.getElementById('faultComparisonDivider').style.display = 'none';
+        document.getElementById('faultComparisonCanvas').style.display = 'none';
         return;
     }
 
@@ -134,10 +151,13 @@ async function submitFaults(event) {
     // Show error if item is empty
     if (!(opt || fifo || sc || lru)){
         showError(msg, 'Please select at least one algorithm.');
+        document.getElementById('faultComparisonDivider').style.display = 'none';
+        document.getElementById('faultComparisonCanvas').style.display = 'none';
         return;
     };
 
     showSuccess(msg);
+    document.getElementById('faultComparisonDivider').style.display = 'block';
 
     try {
         const res =
@@ -158,17 +178,7 @@ async function submitFaults(event) {
 }
 
 /* Faults by Range Form */
-eventList.forEach(event => faultsRangeMinVal.addEventListener(event, debounce(() => validateRange(faultsRangeMinVal.value, faultsRangeMaxVal.value))));
-eventList.forEach(event => faultsRangeMaxVal.addEventListener(event, debounce(() => validateRange(faultsRangeMinVal.value, faultsRangeMaxVal.value))));
-
-function validateRange(minFrames, maxFrames) {
-  let msg = document.getElementById('faultsFrameRangeMsg');
-  if(!isRangeValid(minFrames, maxFrames)){
-    showError(msg, 'Please provide a valid range between 2 and 12.');
-    return;
-  }
-  showSuccess(msg);
-}
+document.querySelector('#faultRangeForm').addEventListener('input', debounce((event) => submitFaultsRange(event)));
 
 faultRangeForm.addEventListener('submit', async event => {submitFaultsRange(event)});
 
@@ -179,6 +189,9 @@ async function submitFaultsRange(event) {
 
     if(!isRefStringValid(refString) || isEmpty(refString)){
         showError(refStrInpt, 'Please provide or generate a valid reference string.');
+        //Hide the chart
+        document.getElementById('faultRangeComparisonDivider').style.display = 'none';
+        document.getElementById('faultRangeComparisonCanvas').style.display = 'none';
         return;
     }
 
@@ -191,25 +204,30 @@ async function submitFaultsRange(event) {
     let minFrames = faultsRangeMinVal.value;
     let maxFrames = faultsRangeMaxVal.value;
     let msg = document.getElementById('faultsRangeMsg');
-    let button = document.getElementById('faultsRangeCompareBtn');
     refString = btoa(refString);
 
     if (!(opt || fifo || sc || lru)){
       showError(msg, 'Please select at least one algorithm.');
+      document.getElementById('formGroupRange').classList.remove('has-success');
+      //Hide the chart
+      document.getElementById('faultRangeComparisonDivider').style.display = 'none';
+      document.getElementById('faultRangeComparisonCanvas').style.display = 'none';
       return;
     };
 
     showSuccess(msg);
-
     msg = document.getElementById('faultsFrameRangeMsg');
 
     if(!isRangeValid(minFrames, maxFrames)){
       showError(msg, 'Please provide a valid range between 2 and 12.');
+      //Hide the chart
+      document.getElementById('faultRangeComparisonDivider').style.display = 'none';
+      document.getElementById('faultRangeComparisonCanvas').style.display = 'none';
       return;
     }
 
     showSuccess(msg);
-    button.classList.toggle('loading');
+    document.getElementById('faultRangeComparisonDivider').style.display = 'block';
 
     try {
       const res =
@@ -232,13 +250,11 @@ async function submitFaultsRange(event) {
     } catch (err) {
       console.log(err);
     }
-
-    button.classList.toggle('loading');
-
 }
 
 
 /* Memory View Form */
+memoryViewForm.addEventListener('input', debounce((event) => submitMemoryView(event, 300)));
 memoryViewForm.addEventListener('submit', async event => {submitMemoryView(event)});
 
 async function submitMemoryView(event) {
@@ -248,6 +264,9 @@ async function submitMemoryView(event) {
 
     if(!isRefStringValid(refString) || isEmpty(refString)){
         showError(refStrInpt, 'Please provide or generate a valid reference string.');
+        //Hide the table
+        document.getElementById('memoryTableDivider').style.display = 'none';
+        document.getElementById('memoryTable').style.display = 'none';
         return;
     }
 
@@ -275,6 +294,11 @@ async function submitMemoryView(event) {
 
     refString = btoa(refString);
     let frames = document.getElementById('memoryFrameSize').value;
+    let dividerText = 'Table for ' + selectVal;
+    let divider = document.getElementById('memoryTableDivider')
+    divider.setAttribute('data-content', dividerText);
+    divider.style.display = 'block';
+    document.getElementById('memoryTable').style.display = 'block';
 
     try {
         const res =
@@ -336,7 +360,7 @@ async function submitMemoryView(event) {
 
           table.appendChild(tr)
         }
-        localStorage.setItem('memTable', table);
+        table.style.width = '100%';
         tableInsert = document.getElementById('memoryTable');
         tableInsert.replaceChildren(table);
     } catch (err) {
@@ -390,3 +414,7 @@ function createMemoryTableObj(htmlTableObj, memoryTableObj, algorithm) {
     }
 }
 
+let submitEvent = new Event('submit');
+submitFaults(submitEvent); 
+submitFaultsRange(submitEvent);
+submitMemoryView(submitEvent);

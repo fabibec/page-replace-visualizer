@@ -1,22 +1,16 @@
 const chartBackgroundColors = [
-    'rgba(49, 56, 102, 0.2)', //
-    'rgba(80, 64, 153, 0.2)', //
-    'rgba(151, 78, 195, 0.2)', //
-    'rgba(254, 123, 229, 0.2)', //
-    // 'rgb(54, 162, 235, 0.2)', // blue
-    // 'rgb(153, 102, 255, 0.2)', // purple
-    // 'rgb(201, 203, 207, 0.2)' // grey
-
+    'rgba(32, 14, 58, 0.2)', 
+    'rgba(56, 65, 157, 0.2)', 
+    'rgba(56, 135, 190, 0.2)', 
+    'rgba(82, 211, 216, 0.2)', 
 ];
 const chartBorderColors = [
-    'rgba(49, 56, 102)', //
-    'rgba(80, 64, 153)', //
-    'rgba(151, 78, 195)', //
-    'rgba(254, 123, 229)', //
-    // 'rgb(54, 162, 235)', // blue
-    // 'rgb(153, 102, 255)', // purple
-    // 'rgb(201, 203, 207)' // grey
- ];
+    'rgb(32, 14, 58)', 
+    'rgb(56, 65, 157)', 
+    'rgb(56, 135, 190)', 
+    'rgb(82, 211, 216)', 
+];
+
 const fifoColor = {
     backgroundColor: chartBackgroundColors[0],
     borderColor: chartBorderColors[0]
@@ -87,7 +81,7 @@ let faultComparisonChart = new Chart(faultComparisonCanvas, {
     scales: {
       y: {
         ticks: {
-          color: "#3b4351",
+          color: '#3b4351',
           beginAtZero: true,
           stepSize: 1
         },
@@ -100,7 +94,7 @@ let faultComparisonChart = new Chart(faultComparisonCanvas, {
       },
       x: {
         ticks: {
-          color: "#3b4351",
+          color: '#3b4351',
         },
         grid: {
           display: false,
@@ -112,7 +106,7 @@ let faultComparisonChart = new Chart(faultComparisonCanvas, {
     },
     plugins: {
         datalabels: {
-          color: 'blackS',
+          color: 'black',
           font: {
             weight: 'bold'
           }
