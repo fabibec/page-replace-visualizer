@@ -66,19 +66,19 @@
         <form id="faultForm">
           <div class="form-group">
             <label class="form-checkbox form-inline">
-              <input type="checkbox" onclick="toggleAllCheckboxes(this, 'faults');"><i class="form-icon"></i>Select All
+              <input id="checkAllFaults" type="checkbox" onclick="toggleAllCheckboxes(this, 'faults');" checked=""><i class="form-icon"></i>Select All
             </label>
             <label class="form-checkbox form-inline">
-              <input type="checkbox" name="faults" id="faultsFifoSlct" checked=""><i class="form-icon"></i>FIFO
+              <input type="checkbox" onclick="onFaultCheckboxClick('faults');" name="faults" id="faultsFifoSlct" checked=""><i class="form-icon"></i>FIFO
             </label>
             <label class="form-checkbox form-inline">
-              <input type="checkbox" name="faults" id="faultsScSlct" checked=""><i class="form-icon"></i>SC
+              <input type="checkbox" onclick="onFaultCheckboxClick('faults');" name="faults" id="faultsScSlct" checked=""><i class="form-icon"></i>SC
             </label>
             <label class="form-checkbox form-inline">
-              <input type="checkbox" name="faults" id="faultsLruSlct"><i class="form-icon"></i>LRU
+              <input type="checkbox" onclick="onFaultCheckboxClick('faults');" name="faults" id="faultsLruSlct" checked=""><i class="form-icon"></i>LRU
             </label>
             <label class="form-checkbox form-inline">
-              <input type="checkbox" name="faults" id="faultsOptSlct"><i class="form-icon"></i>OPT
+              <input type="checkbox" onclick="onFaultCheckboxClick('faults');" name="faults" id="faultsOptSlct" checked=""><i class="form-icon"></i>OPT
             </label>
             <p class="form-input-hint" id="faultsMsg"></p>
           </div>
@@ -104,19 +104,19 @@
         <form id="faultRangeForm">
           <div class="form-group">
             <label class="form-checkbox form-inline">
-              <input type="checkbox" onClick="toggleAllCheckboxes(this, 'faultsRange');"><i class="form-icon" ></i>Select All
+              <input id="checkAllFaultsRange" type="checkbox" onClick="toggleAllCheckboxes(this, 'faultsRange');" checked=""><i class="form-icon" ></i>Select All
             </label>
             <label class="form-checkbox form-inline">
-              <input type="checkbox" name="faultsRange" id="faultsRangeFifoSlct" checked=""><i class="form-icon"></i>FIFO
+              <input type="checkbox" name="faultsRange" onclick="onFaultRangeCheckboxClick('faultsRange');" id="faultsRangeFifoSlct" checked=""><i class="form-icon"></i>FIFO
             </label>
             <label class="form-checkbox form-inline">
-              <input type="checkbox" name="faultsRange" id="faultsRangeScSlct" checked=""><i class="form-icon"></i>SC
+              <input type="checkbox" name="faultsRange" onclick="onFaultRangeCheckboxClick('faultsRange');" id="faultsRangeScSlct" checked=""><i class="form-icon"></i>SC
             </label>
             <label class="form-checkbox form-inline">
-              <input type="checkbox" name="faultsRange" id="faultsRangeLruSlct" ><i class="form-icon"></i>LRU
+              <input type="checkbox" name="faultsRange" onclick="onFaultRangeCheckboxClick('faultsRange');" id="faultsRangeLruSlct" checked=""><i class="form-icon"></i>LRU
             </label>
             <label class="form-checkbox form-inline">
-              <input type="checkbox" name="faultsRange" id="faultsRangeOptSlct"><i class="form-icon"></i>OPT
+              <input type="checkbox" name="faultsRange" onclick="onFaultRangeCheckboxClick('faultsRange');" id="faultsRangeOptSlct" checked=""><i class="form-icon"></i>OPT
             </label>
             <p class="form-input-hint" id="faultsRangeMsg"></p>
           </div>
