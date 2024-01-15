@@ -24,7 +24,7 @@
           <!-- Prevent implicit submission of the form -->
           <button type="submit" disabled style="display: none" aria-hidden="true"></button>
           <div class="form-group">
-            <label class="form-label form-inline float-left" for="refStrSize">Frames:</label>
+            <label class="form-label form-inline float-left" for="refStrSize">Length:</label>
             <label class="form-label form-inline float-right" id="refStrSizeValue" for="refStrSize">15</label>
             <input class="slider tooltip" type="range" min="4" max="50" value="15" oninput="this.setAttribute('value', this.value);updateSliderValue('refStrSize', 'refStrSizeValue');" id="refStrSize">
           </div>
@@ -83,7 +83,7 @@
             <p class="form-input-hint" id="faultsMsg"></p>
           </div>
           <div class="form-group">
-            <label class="form-label form-inline float-left" for="faultsFrameSize">Length:</label>
+            <label class="form-label form-inline float-left" for="faultsFrameSize">Frames:</label>
             <label class="form-label form-inline float-right" id="FrameSizeValue" for="faultsFrameSize">10</label>
             <input class="slider tooltip" type="range" min="2" max="12" value="6" oninput="this.setAttribute('value', this.value);updateSliderValue('faultsFrameSize', 'FrameSizeValue');" id="faultsFrameSize">
           </div>
