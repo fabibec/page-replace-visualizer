@@ -69,6 +69,7 @@ tr > th {
 /* grid container */
 .page-layout {
     height: 100vh;
+    height: 100dvh;
     grid-template-rows: auto 1fr;
     display:grid;
     overflow-y: hidden;
